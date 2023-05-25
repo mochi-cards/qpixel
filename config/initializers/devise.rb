@@ -300,7 +300,7 @@ Devise.setup do |config|
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
-  config.saml_session_index_key = :session_index
+  # config.saml_session_index_key = :session_index
 
   # You can set this value to use Subject or SAML assertation as info to which email will be compared.
   # If you don't set it then email will be extracted from SAML assertation attributes.
@@ -325,23 +325,43 @@ Devise.setup do |config|
   # For certificates and keys, you can use
   #   File.read('path/to/certificate')
   # instead of providing the certificate/key in a string.
-  #
-  # config.saml_configure do |settings|
-  #   settings.assertion_consumer_service_url     = '<http(s)-site-address-here>/users/saml/auth'
-  #   settings.assertion_consumer_service_binding = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
-  #   settings.name_identifier_format             = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent'
-  #   settings.security[:want_assertions_signed]  = true
-  #   settings.security[:metadata_signed]         = true
-  #   settings.security[:authn_requests_signed]   = true
-  #   settings.force_authn                        = !Rails.env.production?
-  #   settings.protocol_binding                   = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-  #   settings.passive                            = false
-  #   settings.issuer                             = '<http(s)-site-address-here>/users/saml/metadata'
-  #   settings.idp_slo_target_url                 = '<single logout service url of IDP>'
-  #   settings.idp_sso_target_url                 = '<single sign on service url of IDP>'
-  #   settings.idp_entity_id                      = '<metadata url of IDP>'
-  #   settings.idp_cert                           = '<certificate of IDP>'
-  #   settings.certificate                        = '<your (self-signed) certificate>'
-  #   settings.private_key                        = '<your key (for your certificate)>'
-  # end
+  idp_host = Rails.env.production? ? 'https://api.mochi.cards' : 'http://localhost:3000'
+  sp_host = Rails.env.production? ? 'https://talk.mochi.cards' : 'http://localhost:3001'
+
+  config.saml_configure do |settings|
+    settings.assertion_consumer_service_url     = "#{sp_host}/users/saml/auth"
+    settings.assertion_consumer_service_binding = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+    settings.name_identifier_format             = 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent'
+    settings.security[:want_assertions_signed]  = false
+    settings.security[:metadata_signed]         = true
+    settings.security[:authn_requests_signed]   = false
+    # settings.security[:authn_requests_signed]   = true  # Enable signature on AuthNRequest
+    settings.security[:logout_requests_signed]  = true  # Enable signature on Logout Request
+    settings.security[:logout_responses_signed] = true  # Enable signature on Logout Response
+    # Implicit defaults. Must match the fingerprint on the IdP.
+    # https://github.com/SAML-Toolkits/ruby-saml/tree/c9685a98a9c00c38af65364e70a7315eb49a2222#signing-and-decryption
+    # settings.security[:digest_method]    = XMLSecurity::Document::SHA1
+    # settings.security[:signature_method] = XMLSecurity::Document::RSA_SHA1
+    settings.force_authn                        = !Rails.env.production?
+    settings.protocol_binding                   = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+    settings.passive                            = false
+    # settings.issuer                             = '#{sp_host}/users/saml/metadata'
+    settings.sp_entity_id                       = "#{sp_host}/users/saml/metadata"
+    settings.idp_entity_id                      = "#{idp_host}/saml/metadata"
+    settings.idp_slo_target_url                 = "#{idp_host}/saml/logout"
+    # Should equal Utils::BINDINGS[:post] in order to sign the XML document, required by ruby saml_idp gem.
+    # This is where the SP signs the document:
+    # https://github.com/SAML-Toolkits/ruby-saml/blob/c9685a98a9c00c38af65364e70a7315eb49a2222/lib/onelogin/ruby-saml/logoutrequest.rb#L139
+    # And this is where the IdP validates the signature:
+    # https://github.com/saml-idp/saml_idp/blob/master/lib/saml_idp.rb#L69
+    # If this settings doesn't match Utils::BINDINGS[:post], then the document won't get signed.
+    # https://www.ibm.com/docs/en/sva/9.0.4?topic=federations-saml-20-bindings
+    # When this is set to Redirect, the parameters are sent as URL parameters.
+    settings.idp_slo_service_binding            = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+    settings.idp_sso_target_url                 = "#{idp_host}/saml/auth"
+    settings.idp_entity_id                      = "#{idp_host}/saml/auth"
+    settings.idp_cert                           = Rails.application.credentials.dig(:saml, :idp_certificate)
+    settings.certificate                        = Rails.application.credentials.dig(:saml, :certificate)
+    settings.private_key                        = Rails.application.credentials.dig(:saml, :private_key)
+  end
 end
