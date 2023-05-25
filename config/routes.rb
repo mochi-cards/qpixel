@@ -120,6 +120,7 @@ Rails.application.routes.draw do
   end
 
   scope 'posts' do
+    root                                   to: 'posts#index', as: :posts
     scope 'suggested-edit' do
       get    ':id',           to: 'suggested_edit#show', as: :suggested_edit
       post   ':id/approve',   to: 'suggested_edit#approve', as: :suggested_edit_approve
