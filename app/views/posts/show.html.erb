@@ -20,7 +20,7 @@
 <%= render 'posts/expanded', post: @post, float_notice: false %>
 
 <% if @post.post_type.has_answers %>
-  <h2><%= pluralize(@post.children.where(deleted: false).count, 'answer') %></h2>
+  <h2><%= pluralize(@post.children.where(deleted: false).count, @post.post_type.answer_type.name) %></h2>
 
   <div class="button-list is-gutterless has-float-right">
     <%= link_to 'Score', request.params.merge(sort: 'score'),
@@ -45,7 +45,7 @@
   </div>
 
   <% if user_signed_in? && !@post.closed %>
-    <h2>Your Answer</h2>
+    <h2>Your <%= @post.post_type.answer_type.name %></h2>
     <%= render 'posts/form', post: Post.new(post_type_id: Answer.post_type_id, category: @post.category,
                                             parent: @post), type_summary: false,
                              category: @post.category, post_type: PostType['Answer'], inline_parent: false,
