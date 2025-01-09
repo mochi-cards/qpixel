@@ -15,10 +15,6 @@
         </ul>
       </div>
     </div>
-    <% sha, date = current_commit %>
-    <p>Powered by <%= link_to 'Codidact', 'https://codidact.org/' %>. <% if sha&.present? %>Version <%= 
-      link_to sha[0..7], "https://github.com/codidact/qpixel/commit/#{sha}" 
-    %> (<%= date.to_time.utc.strftime('%F %TZ') %>)<% end %>
     </p>
   </div>
 </footer>

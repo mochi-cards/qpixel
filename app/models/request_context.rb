@@ -12,13 +12,13 @@ class RequestContext
       if $redis
         $redis
       else
-        processed = ERB.new(File.read(Rails.root.join('config', 'database.yml'))).result(binding)
-        $redis ||= Redis.new(
-          YAML.safe_load(processed,
-                         permitted_classes: [],
-                         permitted_symbols: [],
-                         aliases: true)["redis_#{Rails.env}"].deep_symbolize_keys
-        )
+        # processed = ERB.new(File.read(Rails.root.join('config', 'database.yml'))).result(binding)
+        $redis ||= Redis.new(url: ENV["REDIS_URL"], ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE })
+        #   YAML.safe_load(processed,
+        #                  permitted_classes: [],
+        #                  permitted_symbols: [],
+        #                  aliases: true)["redis_#{Rails.env}"].deep_symbolize_keys
+        # )
       end
     rescue NoMethodError
       raise LoadError, "You don't appear to have any Redis config in config/database.yml"

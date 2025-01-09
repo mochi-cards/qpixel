@@ -325,8 +325,8 @@ Devise.setup do |config|
   # For certificates and keys, you can use
   #   File.read('path/to/certificate')
   # instead of providing the certificate/key in a string.
-  idp_host = Rails.env.production? ? 'https://api.mochi.cards' : 'http://localhost:3000'
-  sp_host = Rails.env.production? ? 'https://talk.mochi.cards' : 'http://localhost:3001'
+  idp_host = Rails.env.production? ? ENV['IDP_HOST'] : 'http://localhost:3000'
+  sp_host = Rails.env.production? ? ENV['SP_HOST'] : 'http://localhost:3001'
 
   config.saml_configure do |settings|
     settings.assertion_consumer_service_url     = "#{sp_host}/users/saml/auth"

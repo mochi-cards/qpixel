@@ -1,0 +1,15 @@
+test:
+  service: Disk
+  root: <%= Rails.root.join('tmp/storage') %>
+
+local:
+  service: Disk
+  root: <%= Rails.root.join('storage') %>
+
+digitalocean:
+  service: S3
+  endpoint: https://qpixel-storage.nyc3.digitaloceanspaces.com
+  access_key_id: <%= Rails.application.credentials.dig(:digitalocean, :access_key) %>
+  secret_access_key: <%= Rails.application.credentials.dig(:digitalocean, :secret) %>
+  bucket: qpixel-storage
+  region: unused

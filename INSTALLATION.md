@@ -251,3 +251,16 @@ If you edit the seed files, use the following command to add them to your databa
 `UPDATE_POSTS=true rails db:seed`
 
 You can also edit the topics in the UI. As an administrator, you'll see an edit button on help topics when you view them, and the editor provides an option to deploy changes across your network of communities. Administrators can update help topics in this way at any time.
+
+
+# Heroku setup
+
+1. Add MySQL addon (JawsDB)
+2. Add Redis addon (Heroku Key-Value Store)
+3. Add MySQL env variable https://devcenter.heroku.com/articles/jawsdb#using-jawsdb-with-rails
+4. Add rails master key env variable
+  - cat config/master.key | pbcopy
+  - heroku config:set RAILS_MASTER_KEY=your_master_key
+5. Update `QPIXEL_BASE` env variable in main rails app
+6. Make sure config/database.yml is commited
+  - Important keys are: `encoding: utf8mb4` and `collation: utf8mb4_0900_ai_ci`

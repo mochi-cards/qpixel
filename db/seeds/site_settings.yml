@@ -1,5 +1,5 @@
 - name: SiteName
-  value: QPixel
+  value: Mochi / Forum
   value_type: string
   category: SiteDetails
   description: >
@@ -220,14 +220,14 @@
     Make sure your server is allowed to send email from this address, or your mails will not be received.
 
 - name: NoReplySenderName
-  value: Codidact
+  value: Mochi
   value_type: string
   category: Email
   description: >
     The name of the sender of no-reply emails.
 
 - name: NoReplySenderEmail
-  value: noreply@codidact.com
+  value: info@mochi.com
   value_type: string
   category: Email
   description: >
@@ -272,7 +272,7 @@
     The name of the donation support email address.
 
 - name: SupportReceiverEmail
-  value: info@codidact.org
+  value: support@mochi.cards
   value_type: string
   category: Email
   description: >
@@ -636,7 +636,7 @@
     This setting controls how many characters of a post are shown.
 
 - name: SsoSignIn
-  value: false
+  value: true
   value_type: boolean
   community_id: ~
   category: SignInAndSignUp

@@ -19,7 +19,7 @@ Rails.application.configure do
 
   # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
-  # config.require_master_key = true
+  config.require_master_key = true
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
@@ -41,7 +41,7 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Store uploaded files on Amazon S3 (see config/storage.yml for options).
-  config.active_storage.service = :s3
+  config.active_storage.service = :digitalocean
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
@@ -59,16 +59,24 @@ Rails.application.configure do
   config.log_tags = [ :subdomain, :uuid ]
 
   # Set the cache store to the redis that was configured in the database.yml
-  processed = ERB.new(File.read(Rails.root.join('config', 'database.yml'))).result(binding)
-  redis_config = YAML.safe_load(processed, permitted_classes: [], permitted_symbols: [], aliases: true)["redis_#{Rails.env}"]
   config.cache_store = QPixel::NamespacedEnvCache.new(
     ActiveSupport::Cache::RedisCacheStore.new(
-      **redis_config.deep_symbolize_keys.merge(reconnect_attempts: 3),
-      error_handler: -> (method:, returning:, exception:) {
-        Rails.logger.error("Cache error: method=#{method} returning=#{returning} exception=#{exception.message}")
-      }
+      redis: Redis.new(
+        url: ENV["REDIS_URL"],
+        ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE }
+      )
     )
   )
+  # processed = ERB.new(File.read(Rails.root.join('config', 'database.yml'))).result(binding)
+  # redis_config = YAML.safe_load(processed, permitted_classes: [], permitted_symbols: [], aliases: true)["redis_#{Rails.env}"]
+  # config.cache_store = QPixel::NamespacedEnvCache.new(
+  #   ActiveSupport::Cache::RedisCacheStore.new(
+  #     **redis_config.deep_symbolize_keys.merge(reconnect_attempts: 3),
+  #     error_handler: -> (method:, returning:, exception:) {
+  #       Rails.logger.error("Cache error: method=#{method} returning=#{returning} exception=#{exception.message}")
+  #     }
+  #   )
+  # )
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
