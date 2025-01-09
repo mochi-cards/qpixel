@@ -1,0 +1,119 @@
+<%# is_question = post.post_type_id == Question.post_type_id %>
+<%# is_article = post.post_type_id == Article.post_type_id %>
+<%# is_meta = (is_question && post.meta?) || (!is_question && post.parent&.meta?) %>
+<% user = post.user %>
+<% active_user = post.last_activity_by || post.user %>
+<% @show_type_tag = !!defined?(show_type_tag) ? show_type_tag : false %>
+<% @show_category_tag = !!defined?(show_category_tag) ? show_category_tag : false %>
+<% @last_activity = !!defined?(last_activity) ? last_activity : true %>
+
+<div class="post-list-item <%= post.deleted ? 'deleted-content' : '' %>" data-ckb-list-item data-ckb-item-type="link">
+  <div class="vote-count">
+    <% if post.post_type.has_votes %>
+      <% unless post.locked? %>
+        <% existing_vote = my_vote(post) %>
+        <button class="vote-button <%= (existing_vote&.vote_type == 1) ? 'active' : '' %>"
+                data-vote-type="1" data-post-id="<%= post.id %>" data-vote-id="<%= existing_vote&.id %>" id="post-<%= post.id %>-up" aria-label="Upvote">
+          <%= octicon "chevron-up",
+            :height => 18,
+            :class => "",
+            :"aria-label" => "upvote"
+          %>
+          <span class="js-upvote-count"><%= post.upvote_count + 1 %></span>
+        </button>
+      <% end %>
+    <% else %>
+      <div class="item-list--number-value post--no-votes">
+        <div style="width: 26px; fill: var(--color-fg-subtle); text-align: center;">
+          <%= octicon "circle", :height => 12,  :class => "category-icon", :"aria-label" => "This post type does not support voting." %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="post-avatar" style="display: none;">
+    <%= link_to user_path(user), dir: 'ltr', class: 'post-user-link', data: {} do %>
+      <img alt="user card" src="<%= avatar_url(user, 32) %>" height="32" width="32" class="post-avatar" />
+    <% end %>
+  </div>
+
+  <!-- Title -->
+  <div class="post-title">
+    <h3 class="post-list--title">
+      <%= link_to generic_share_link(post), 'data-ckb-item-link' => '' do %>
+        <% if @show_category_tag && post.post_type.has_category %>
+          <span class="badge is-tag is-filled"><%= defined?(@category) ? @category.name : post.category.name %></span>
+        <% end %>
+        <%= post.post_type.is_top_level ? post.title : post.parent.title %>
+        <%= post.post_type.is_closeable && post.closed && !post.duplicate_post  ? "[closed]" : "" %>
+      <%= post.duplicate_post && post.post_type.is_closeable && post.closed ? "[duplicate]" : "" %>
+      <% end %>
+    </h3>
+
+    <!-- Truncated body -->
+    <% if ((SiteSetting['PostBodyListTruncateLength'] || 0) > 0) %>
+      <p class="post-list--content">
+        <%= strip_tags(post.body).truncate(SiteSetting['PostBodyListTruncateLength'] || 200) %>
+      </p>
+    <% end %>
+
+
+    <!-- Tags -->
+    <% if false && post.post_type.has_tags %>
+      <% required_ids = post.category&.required_tag_ids %>
+      <% moderator_ids = post.category&.moderator_tag_ids %>
+      <% topic_ids = post.category&.topic_tag_ids %>
+      <% category_sort_tags(post.tags, required_ids, topic_ids, moderator_ids).each do |tag| %>
+        <% required = required_ids&.include?(tag.id) ? 'is-filled' : '' %>
+        <% topic = topic_ids&.include?(tag.id) ? 'is-outlined' : '' %>
+        <% moderator = moderator_ids.include?(tag.id) ? 'is-red is-outlined' : '' %>
+        <%= link_to tag.name, tag_url(id: post.category_id, tag_id: tag.id),
+                         class: "post-tag #{required} #{topic} #{moderator}",
+                         title: tag.excerpt.present? ? tag.excerpt : "(no description yet)" %>
+      <% end %>
+    <% end %>
+
+    <!-- Poster / last activity -->
+    <% category = defined?(@category) ? @category : post.category %>
+    <div class="post-list--meta" style="display: flex; align-items: center;">
+      <span class="sign-up-to-post category-tag" style="font-weight: 500; color: var(--color-fg); fill: var(--color-fg-subtle); display: inline-flex; align-items: center; gap: 3px;">
+        <%= octicon "hash", :height => 12,  :class => "category-icon", :"aria-label" => category.name %>
+        <%= category.name %>
+      </span>
+      <span>
+        <% if (post.last_activity != post.created_at) %>
+          <%= post.last_activity_type %>
+          <span title="<%= post.last_activity.iso8601 %>"><%= time_ago_in_words(post.last_activity, locale: :en_abbrev) %> ago</span>
+          by <strong><%= user_link active_user %></strong>
+        <% else %>
+          posted <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at, locale: :en_abbrev) %> ago</span> by <strong><%= user_link post.user %></strong>
+        <% end %>
+      </span>
+    </div>
+
+    <div class="has-padding-top-2">
+      <% category = defined?(@category) ? @category : post.category %>
+      <% if @show_type_tag || category.display_post_types.reject { |e| e.to_s.empty? }.size > 1 %>
+        <%= post_type_badge(post.post_type) %>
+      <% end %>
+      <% display_label = user_preference('display_import_labels', community: true) == 'true' %>
+      <% if (post.att_source.present? || post.created_at < RequestContext.community.created_at) && display_label %>
+        <%= link_to post.att_source, class: 'badge is-tag' do %>
+          <i class="fab fa-stack-exchange" title="Imported <%= post.created_at.iso8601 %>"
+             aria-label="Imported <%= post.created_at.iso8601 %>"></i>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="post-stats">
+    <% if post.post_type.has_answers? %>
+      <div class="reply-count">
+        <%= octicon "comment", :height => 16,  :class => "reply-count-icon", :"aria-label" => "comments" %>
+        <%= post.answer_count %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+

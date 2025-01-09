@@ -1,0 +1,30 @@
+.mochi--toggle-drop-down {
+  position: relative;
+  border: none;
+  cursor: pointer;
+  fill: var(--color-fg);
+}
+
+.mochi--drop-down-menu {
+  position: absolute;
+  display: none;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-color);
+  text-align: left;
+  min-width: 150px;
+  max-width: 200px;
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    border-radius: 6px;
+    padding: 6px 8px;
+    &:hover {
+      background-color: var(--bg-color-light);
+    }
+  }
+}

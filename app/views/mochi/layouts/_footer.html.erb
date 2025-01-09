@@ -1,0 +1,54 @@
+<footer id="footer">
+  <section>
+    <%= image_tag asset_path('mochi/icon.webp'), height: 40, width: 40 %>
+  </section>
+  <section class="about">
+    <span class="h5">Mochi</span>
+    <div>
+      Mochi is a tool to help you learn and remember things.
+    </div>
+    <div class="copyright">
+      &copy; <span id="current-year"><%= Date.current.year %></span> Mochi Cards, LLC
+    </div>
+  </section>
+  <section class="footer-links">
+    <a href="/blog/">
+      Blog
+    </a>
+    <a href="changelog.html">
+      Changelog
+    </a>
+    <a href="docs/faq/">
+      Frequently asked questions
+    </a>
+    <a href="terms.html">
+      Terms of use
+    </a>
+    <a href="privacy.html">
+      Privacy policy
+    </a>
+    <a href="https://twitter.com/MochiCardsApp" target="_blank">
+      Twitter @MochiCardsApp
+    </a>
+    <a href="mailto:support@mochi.cards">
+      Email me
+    </a>
+  </section>
+  <section class="footer-links">
+    <a href="{{> mac_artifact}}" onclick="gtag_report_conversion()" class="umami--click--download">
+      Mac App
+    </a>
+    <a href="{{> windows_artifact}}" onclick="gtag_report_conversion()" class="umami--click--download">
+      Windows App
+    </a>
+    <a href="{{> linux_artifact}}" onclick="gtag_report_conversion()">
+      Linux App
+    </a>
+    <a href="https://apps.apple.com/us/app/mochi-cards/id1507775056" onclick="gtag_report_conversion()">
+      iOS App
+    </a>
+    <a href="https://play.google.com/store/apps/details?id=cards.mochi.app" onclick="gtag_report_conversion()">
+      Android App
+    </a>
+  </div>
+</footer>

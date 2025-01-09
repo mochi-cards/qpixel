@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <%= render 'mochi/layouts/head' %>
+</head>
+<body class="<%= Rails.env.development? ? 'development' : '' %>"
+      data-user-id="<%= user_signed_in? ? current_user.id : 'none' %>" >
+
+  <%= render 'mochi/layouts/header' %>
+
+  <main class="mochi-container">
+    <div>
+      <div style="padding: 0 16px;">
+        <% {notice: :info, alert: :danger, danger: :danger, success: :success, info: :info, warning: :warning}.each do |mt, cc| %>
+          <% if flash[mt].present? %>
+            <div class="notice is-<%= cc.to_s %>">
+              <%= flash[mt] %>
+            </div>
+          <% end %>
+        <% end %>
+
+
+        <% if @first_visit_notice %>
+          <% notice = SiteSetting['FirstVisitGuidance'] %>
+          <% if notice.present? %>
+            <div class="notice js-first-visit-notice" id="fvn">
+              <button type="button" class="button is-close-button" data-dismiss="#fvn" aria-label="Close" id="fvn-dismiss">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <%= raw(sanitize(notice, scrubber: scrubber)) %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <%= yield %>
+      </div>
+    </div>
+
+    <%= render 'mochi/layouts/sidebar' %>
+  </main>
+
+  <%= render 'mochi/layouts/footer' %>
+
+  <%= render 'layouts/matomo' %>
+
+  <script src="https://7zb04r9ckbwg.statuspage.io/embed/script.js"></script>
+</body>
+</html>

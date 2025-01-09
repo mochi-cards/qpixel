@@ -1,0 +1,95 @@
+<% content_for :title, @post.title.truncate(50) %>
+<% content_for :description do %>
+  <% Rails.cache.fetch "posts/#{@post.id}/description" do %>
+    <%= @post.body_plain[0..74].strip %>...
+    <%= @post.children.any? ? @post.children.first.body_plain[0..74].strip : '' %>
+  <% end %>
+<% end %>
+
+<% content_for :twitter_card_meta do %>
+  <meta name="twitter:card" content="summary" />
+  <% if @post.user&.twitter&.present? %>
+    <meta name="twitter:creator" content="@<%= @post.user.twitter %>" />
+  <% end %>
+  <meta property="og:url" content="<%= post_url(@post) %>" />
+  <meta property="og:title" content="<%= @post.title %>" />
+  <meta property="og:description" content="<%= @post.body_plain[0..150].strip %>..." />
+  <meta property="og:image" content="<%= "https://#{RequestContext.community.host}#{SiteSetting['SiteLogoPath']}" %>" />
+<% end %>
+
+
+<div style="display: grid; grid-template-columns: 256px 1fr;">
+  <div class="category-sidebar">
+    <ul class="category-list">
+      <h2 style="font-size: 16px;">Categories</h2>
+      <li>
+        <%= link_to posts_path, class: "category-link" do %>
+          <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
+
+          All posts
+        <% end %>
+      </li>
+      <% @header_categories.each do |cat| %>
+        <% next unless (current_user&.trust_level || 0) >= (cat.min_view_trust_level || -1) %>
+        <li>
+          <%= link_to category_path(cat), class: "category-link #{active?(cat) ? 'active' : ''}" do %>
+            <%= octicon "hash", :height => 16,  :class => "category-icon", :"aria-label" => cat.name %>
+            <%= cat.name %>
+            <% if user_signed_in? && cat.new_posts_for?(current_user) %>
+              <span class="badge is-status" title="unread activity in category"></span>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+
+      <% if current_user&.is_admin %>
+        <li>
+          <%= link_to 'Edit Category', edit_category_path(@post.category) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div>
+
+    <%= render 'mochi/posts/expanded', post: @post, float_notice: false %>
+
+    <% if @post.post_type.has_answers %>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin: 1em 0;">
+        <div>
+          <h2 style="font-size: 16px;"><%= pluralize(@post.children.where(deleted: false).count, @post.post_type.answer_type.name) %></h2>
+        </div>
+        <div class="pills-container">
+          <div class="pill-button">
+            <a href="<%= query_url(sort: 'score') %>" class="<%= params[:sort].nil? || params[:sort] == 'score' ? 'active' : '' %>">Score</a>
+          </div>
+          <div class="pill-button">
+            <a href="<%= query_url(sort: 'active') %>" class="<%= params[:sort] == 'active' ? 'active' : '' %>">Active</a>
+          </div>
+        </div>
+      </div>
+
+      <% @children.each do |answer| %>
+        <%= render 'mochi/posts/expanded', post: answer, float_notice: answer.id == params[:answer]&.to_i && @children.length > 1 %>
+      <% end %>
+
+      <div class="text-center">
+        <%= will_paginate @children, renderer: BootstrapPagination::Rails %>
+      </div>
+
+      <% if user_signed_in? && !@post.closed %>
+        <%= render 'mochi/posts/form', post: Post.new(post_type_id: Answer.post_type_id, category: @post.category,
+                                                parent: @post), type_summary: false,
+                                 category: @post.category, post_type: PostType['Answer'], inline_parent: false,
+                                 submit_path: create_response_path(post_type: PostType['Answer'], parent: @post) %>
+      <% elsif !@post.closed %>
+        <div class="sign-up-to-post">
+          <%= link_to new_user_registration_path, class: 'mochi-button button is-filled is-success h-m-t-4', style: "margin-right: 6px;" do %>
+            Sign up
+          <% end %>
+          to post a reply. Already have an account? <%= link_to 'Log in', new_saml_user_session_path, class: '' %> to comment.
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

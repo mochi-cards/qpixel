@@ -1,0 +1,71 @@
+<%
+  icon_names = {
+    'Talk'     => 'comment-discussion',
+    'Help'     => 'question',
+    'Feedback' => 'diff-added'
+  }
+%>
+
+<div style="display: grid; grid-template-columns: 256px 1fr;">
+  <div class="category-sidebar">
+    <ul class="category-list">
+      <h2 style="font-size: 16px;">Categories</h2>
+      <li>
+        <%= link_to posts_path, class: "category-link" do %>
+          <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
+
+          All posts
+        <% end %>
+      </li>
+      <% @header_categories.each do |cat| %>
+        <% next unless (current_user&.trust_level || 0) >= (cat.min_view_trust_level || -1) %>
+        <li>
+          <%= link_to category_path(cat), class: "category-link #{active?(cat) ? 'active' : ''}" do %>
+            <% icon_name = "hash" %>
+            <% if icon_name %>
+              <%= octicon icon_name, :height => 16,  :class => "category-icon", :"aria-label" => cat.name %>
+            <% end %>
+            <%= cat.name %>
+            <% if user_signed_in? && cat.new_posts_for?(current_user) %>
+              <span class="badge is-status" title="unread activity in category"></span>
+            <% end %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div>
+
+    <!-- Title -->
+    <h2 class="category-title">
+      <% icon_name = 'comment-discussion' %>
+      <%= octicon 'comment-discussion',
+        :height       => 20,
+        :class        => "category-icon",
+        :"aria-label" => "All posts" %>
+      All posts
+    </h2>
+
+    <!-- Description -->
+    <div class="category-description">
+      <p>
+        Viewing all posts across all categories.
+      </p>
+    </div>
+
+
+    <!-- Post list -->
+    <div class="item-list">
+      <% @posts.each do |post| %>
+        <%= render 'mochi/posts/type_agnostic', post: post %>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="has-padding-top-4">
+      <%= will_paginate @posts, renderer: BootstrapPagination::Rails %>
+    </div>
+
+  </div>
+</div>

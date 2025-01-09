@@ -1,0 +1,26 @@
+<%#
+    Start new comment thread dialog.
+%>
+
+<% unless current_user.nil? || params[:inline] == 'true' %>
+  <div class="modal--container" id="new-thread-modal-<%= post.id %>">
+    <div class="modal--body">
+      <div class="thread-footer">
+        <%= form_tag create_comment_thread_path, class: "comment-form" do %>
+          <%= hidden_field_tag :post_id, post.id %>
+
+          <%= text_area_tag :body, '', class: 'form-element js-comment-field', required: true,
+                            placeholder: 'Write a comment',
+                            data: { post: post.id, thread: '-1', character_count: ".js-character-count-#{post.id}" } %>
+          <span class="has-float-right has-font-size-caption js-character-count-<%= post.id %>"
+                data-max="1000" data-min="15">
+            <i class="fas fa-ellipsis-h js-character-count__icon"></i>
+            <span class="js-character-count__count">0 / 1000</span>
+          </span>
+
+          <%= submit_tag 'Create thread', class: 'button is-filled', id: "create_thread_button_#{post.id}", disabled: true %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

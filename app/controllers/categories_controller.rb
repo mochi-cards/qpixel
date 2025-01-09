@@ -17,6 +17,8 @@ class CategoriesController < ApplicationController
   def show
     update_last_visit(@category)
     set_list_posts
+
+    render "mochi/categories/show", layout: "mochi/layouts/application"
   end
 
   def homepage

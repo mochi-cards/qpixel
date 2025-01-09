@@ -1,0 +1,24 @@
+<% is_comment = post.class.name == "Comment" %>
+
+<% if user.nil? || deleted_user?(user) %>
+  deleted user
+<% else %>
+  <%= link_to user_path(user), dir: 'ltr', class: 'post-user-link', data: {} do %>
+    <img alt="user card" src="<%= avatar_url(user, 32) %>" height="32" width="32" class="post-avatar" />
+    <%= rtl_safe_username(user) %>
+  <% end %>
+
+  <a title="<%= post.created_at.iso8601 %>" href="#<%= is_comment ? "comment" : "post" %>-<%= post.id %>" class="post-timestamp">
+    <%= time_ago_in_words(post.created_at) %> ago
+  </a>
+
+  <% if user.is_admin %>
+    <span class="user-label">Admin</span>
+  <% elsif user.is_moderator %>
+    <span class="user-label">Mod</span>
+  <% end %>
+  <% if user.staff? %>
+    <span class="user-label">Staff</span>
+  <% end %>
+<% end %>
+

@@ -199,6 +199,10 @@ $(() => {
     $(evt.target).attr('data-disable-with', 'Posting...');
   });
 
+  $(document).on('input', '.js-comment-field', async ev => {
+    ev.target.style.height = ev.target.scrollHeight + "px";
+  });
+
   const pingable = {};
   $(document).on('keyup', '.js-comment-field', pingable_popup);
 

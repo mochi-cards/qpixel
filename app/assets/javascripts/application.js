@@ -14,6 +14,9 @@
 //= require Chart.bundle
 //= require jquery_ujs
 //= require_tree .
+//
+//= Replaced by mochi/votes.js
+//= stub votes.js
 
 $(document).on('ready', function() {
   $("a.flag-dialog-link").bind("click", (ev) => {

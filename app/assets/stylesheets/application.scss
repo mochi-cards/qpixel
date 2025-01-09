@@ -12,18 +12,24 @@
  *
  *= require_tree .
  *= require_self
+ *= stub "mochi/base"
+ *= stub "mochi/categories"
+ *= stub "mochi/drop_down"
+ *= stub "mochi/footer"
+ *= stub "mochi/header"
+ *= stub "mochi/posts"
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Red+Hat+Display&family=Roboto&family=Roboto+Mono&display=swap');
 @import 'variables';
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: $font-stack-display;
-}
-
-.post h1 {
-  font-size: 1.7em;
-}
+// h1, h2, h3, h4, h5, h6 {
+//   font-family: $font-stack-display;
+// }
+//
+// .post h1 {
+//   font-size: 1.7em;
+// }
 
 .deleted-content {
   background: lighten($danger, 25%);

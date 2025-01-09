@@ -1,0 +1,25 @@
+<header id="top-bar">
+  <a href="/">
+    <%= image_tag asset_path('mochi/icon.webp'), height: 40, width: 40 %>
+    <span>Mochi</span>
+  </a>
+  <div class="links lg">
+    <a href="/blog">
+      Blog
+    </a>
+    <a href="/changelog.html">
+      What's new?
+    </a>
+    <a href="/docs/">
+      Docs
+    </a>
+    <a href="/#pricing-section">
+      Pricing
+    </a>
+    <% if user_signed_in? %>
+      <%= link_to 'Log out', destroy_saml_user_session_path, method: :delete, class: '' %>
+    <% else %>
+      <%= link_to 'Log in', new_saml_user_session_path, class: '' %>
+    <% end %>
+  </div>
+</header>

@@ -79,6 +79,9 @@ gem 'stripe', '~> 5.55'
 # EeeMAILS!
 gem 'premailer-rails', '~> 1.11'
 
+# Github icons
+gem 'octicons_helper', '~> 19.1.0'
+
 group :test do
   gem 'minitest', '~> 5.16.0'
   gem 'minitest-ci', '~> 3.4.0'

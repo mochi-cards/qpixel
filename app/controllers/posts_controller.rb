@@ -156,6 +156,8 @@ class PostsController < ApplicationController
                            score: Arel.sql('deleted ASC, score DESC, RAND()'), active: :last_activity,
                            age: :created_at)
                 .paginate(page: params[:page], per_page: 20)
+
+    render "mochi/posts/show", layout: "mochi/layouts/application"
   end
 
   def index
@@ -176,6 +178,8 @@ class PostsController < ApplicationController
                  .includes(:post_type, :tags).list_includes
                  .paginate(page: params[:page], per_page: 50)
                  .order(sort_param)
+
+    render "mochi/posts/index", layout: "mochi/layouts/application"
   end
 
   def edit; end
