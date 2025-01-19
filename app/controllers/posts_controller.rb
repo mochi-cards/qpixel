@@ -30,6 +30,8 @@ class PostsController < ApplicationController
       check_permissions
       # return # uncomment if you add more code after this
     end
+
+    render "mochi/posts/new", layout: "mochi/layouts/application"
   end
 
   def create
@@ -51,7 +53,7 @@ class PostsController < ApplicationController
 
     if @post.title? && (@post.title.include? '$$')
       flash[:danger] = I18n.t 'posts.no_block_mathjax_title'
-      render :new, status: :bad_request
+      render "mochi/posts/new", layout: "mochi/layouts/application", status: :bad_request
       return
     end
 
@@ -69,7 +71,7 @@ class PostsController < ApplicationController
 
     if @category.present? && @category.min_trust_level.present? && @category.min_trust_level > current_user.trust_level
       @post.errors.add(:base, helpers.i18ns('posts.category_low_trust_level', name: @category.name))
-      render :new, status: :forbidden
+      render "mochi/posts/new", layout: "mochi/layouts/application", status: :forbidden
       return
     end
 
@@ -94,7 +96,7 @@ class PostsController < ApplicationController
       @post.errors.add :base, limit_msg
       AuditLog.rate_limit_log(event_type: "#{level_name.underscore}_post", related: @category, user: current_user,
                               comment: "limit: #{max_posts}\n\npost:\n#{@post.attributes_print}")
-      render :new, status: :forbidden
+      render "mochi/posts/new", layout: "mochi/layouts/application", status: :forbidden
       return
     end
 
@@ -116,7 +118,7 @@ class PostsController < ApplicationController
 
       redirect_to helpers.generic_show_link(@post)
     else
-      render :new, status: :bad_request
+      render "mochi/posts/new", layout: "mochi/layouts/application", status: :bad_request
     end
   end
 
@@ -152,9 +154,19 @@ class PostsController < ApplicationController
                       .or(Post.where(parent_id: @post.id, user_id: current_user&.id).where.not(user_id: nil))
                 end.includes(:votes, :user, :comments, :license, :post_type, :flags, flags: :post_flag_type)
                 .order(Post.arel_table[:id].not_eq(params[:answer]))
-                .user_sort({ term: params[:sort], default: Arel.sql('deleted ASC, score DESC, RAND()') },
-                           score: Arel.sql('deleted ASC, score DESC, RAND()'), active: :last_activity,
-                           age: :created_at)
+                .user_sort(
+                  {
+                    term: params[:sort],
+                    default: if @post.post_type.has_votes
+                               Arel.sql('deleted ASC, score DESC, RAND()')
+                             else
+                               Arel.sql('deleted ASC, created_at ASC, RAND()')
+                             end
+                  },
+                  score: Arel.sql('deleted ASC, score DESC, RAND()'),
+                  active: :last_activity,
+                  age: :created_at
+                )
                 .paginate(page: params[:page], per_page: 20)
 
     render "mochi/posts/show", layout: "mochi/layouts/application"
@@ -182,7 +194,9 @@ class PostsController < ApplicationController
     render "mochi/posts/index", layout: "mochi/layouts/application"
   end
 
-  def edit; end
+  def edit
+    render "mochi/posts/edit", layout: "mochi/layouts/application"
+  end
 
   # Attempts to update a given post
   # @param post [Post] post the user is attempting to update

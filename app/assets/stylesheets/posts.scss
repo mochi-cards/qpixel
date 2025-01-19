@@ -1,7 +1,7 @@
 @import 'variables';
 
 .post-field {
-  font-family: 'Roboto Mono', monospace !important;
+  // font-family: 'Roboto Mono', monospace !important;
 }
 
 .upload-form {
@@ -84,31 +84,31 @@ h1 .badge.is-tag.is-master-tag {
 }
 
 .post-field.widget--body {
-  margin: -1px -1px 3px -1px;
-  border-radius: 0;
-  width: calc(100% + 2px);
+  // margin: -1px -1px 3px -1px;
+  // border-radius: 0;
+  width: 100%;
 
-  + .widget--footer {
-    border-top: none;
-    align-items: center;
-    margin: 0;
-
-    &.mdhint {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1em 0;
-      justify-content: space-between;
-
-      & > * {
-        padding: 0;
-      }
-    }
-
-    & > .draft-status {
-      text-align: center;
-      transition: opacity 0.5s ease-in-out;
-    }
-  }
+  // + .widget--footer {
+  //   border-top: none;
+  //   align-items: center;
+  //   margin: 0;
+  //
+  //   &.mdhint {
+  //     display: flex;
+  //     flex-wrap: wrap;
+  //     gap: 1em 0;
+  //     justify-content: space-between;
+  //
+  //     & > * {
+  //       padding: 0;
+  //     }
+  //   }
+  //
+  //   & > .draft-status {
+  //     text-align: center;
+  //     transition: opacity 0.5s ease-in-out;
+  //   }
+  // }
 }
 
 .post--title {
@@ -211,8 +211,4 @@ h1 .badge.is-tag.is-master-tag {
 
 pre code.hljs {
   padding: unset !important;
-}
-
-.failed-validation {
-  border: 2px solid #d21919 !important;
 }

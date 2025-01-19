@@ -16,8 +16,8 @@ module PostValidations
   def maximum_tags
     if tags_cache.length > 5
       errors.add(:base, "Post can't have more than 5 tags.")
-    elsif tags_cache.empty?
-      errors.add(:base, 'Post must have at least one tag.')
+    # elsif tags_cache.empty?
+    #   errors.add(:base, 'Post must have at least one tag.')
     end
   end
 
