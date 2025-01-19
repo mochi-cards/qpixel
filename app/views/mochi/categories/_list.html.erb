@@ -1,0 +1,38 @@
+<div class="category-sidebar">
+  <ul class="category-list">
+
+    <!-- Category list -->
+    <li>
+      <%= link_to posts_path, class: "category-link" do %>
+        <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
+
+        All posts
+      <% end %>
+    </li>
+
+    <% @header_categories.each do |cat| %>
+      <% next unless (current_user&.trust_level || 0) >= (cat.min_view_trust_level || -1) %>
+      <li>
+        <%= link_to category_path(cat), class: "category-link #{active?(cat) ? 'active' : ''}" do %>
+          <% icon_name = "hash" %>
+          <% if icon_name %>
+            <%= octicon icon_name, :height => 16,  :class => "category-icon", :"aria-label" => cat.name %>
+          <% end %>
+          <%= cat.name %>
+          <% if user_signed_in? && cat.new_posts_for?(current_user) %>
+            <span class="badge is-status" title="unread activity in category"></span>
+          <% end %>
+        <% end %>
+      </li>
+    <% end %>
+
+    <!-- Subscribe button -->
+    <% if false %>
+      <li style="display: none;">
+        <%= link_to 'Subscribe',
+                    new_subscription_path(type: 'category', qualifier: @category.id, return_to: request.path),
+                    class: 'button is-outlined' %>
+      </li>
+    <% end %>
+  </ul>
+</div>

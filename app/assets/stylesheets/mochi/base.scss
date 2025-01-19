@@ -74,6 +74,9 @@ body {
     --color-fg: rgba(51, 51, 51, 1);
     --color-fg-muted: rgba(51, 51, 51, 0.6);
     --color-fg-subtle: #9b9b9b; //rgba(51, 51, 51, 0.5); opacity not allowed in :visited.
+    --color-red: rgb(225, 98, 89);
+    --color-green: rgb(87, 171, 90); //rgb(161, 204, 101);
+    --color-green-bg: rgba(87, 171, 90, 0.1); //rgb(161, 204, 101);
     // --bg-color: rgb(247, 247, 247);
     --bg-color: rgb(247, 247, 247);
     --bg-color-light: rgb(255, 255, 255);
@@ -90,6 +93,7 @@ body {
     --link-underline: 1px solid rgba(55, 53, 47, 0.3);
     --link-underline-hover: 1px solid rgba(55, 53, 47, 1);
     --top-bar-background-hover: rgba(51, 51, 51, 0.05);
+    --post-list-hover: rgba(51, 51, 51, 0.02);
     --card-background: white;
     --card-border: #DFDFDF;
     --border-color: rgba(0, 0, 0, 0.15);
@@ -111,7 +115,8 @@ body {
                         rgb(0 0 0 / 0%) 0px 0px 0px 0px,
                         rgb(0 0 0 / 0%) 0px 0px 0px 0px,
                         rgb(60 66 87 / 8%) 0px 2px 5px 0px;
-    --color-fg-blue: #3182bd;
+    --color-fg-blue: rgb(49, 130, 189); //#3182bd;
+    --color-bg-blue: rgb(49, 130, 189, 0.15); //#3182bd;
     --notification-box-bg: rgba(0, 0, 0, 0.05);
     --notification-box-border: rgba(0, 0, 0, 0.1);
   }
@@ -126,6 +131,9 @@ body {
     --color-fg-muted: rgba(255, 255, 255, 0.6);
     --color-fg-subtle: #777; // rgba(255, 255, 255, 0.4); opacity not allowed in :visited.
     /* --color-fg: rgba(255, 255, 255, 0.9); */
+    --color-red: rgb(225, 98, 89);
+    --color-green: rgb(87, 171, 90); //rgb(161, 204, 101);
+    --color-green-bg: rgba(87, 171, 90, 0.1); //rgb(161, 204, 101);
     --bg-color: rgb(36, 36, 38);
     --bg-color-light: rgb(46, 47, 49);
     --bg-color-lighter: rgb(56, 57, 59);
@@ -141,10 +149,11 @@ body {
     --linux-logo-filter: brightness(0);
     --link-underline: 1px solid rgba(255,255,255, 0.3);
     --link-underline-hover: 1px solid rgba(255,255,255, 1);
-    --top-bar-background-hover: rgba(255, 255, 255, 0.07);
+    --top-bar-background-hover: rgba(255, 255, 255, 0.04);
+    --post-list-hover: rgba(255, 255, 255, 0.02);
     --card-background: rgb(36, 36, 38);
     --card-border: rgba(0,0,0,0.2);
-    --border-color: rgba(255, 255, 255, 0.15);
+    --border-color: rgba(255, 255, 255, 0.1);
     --tooltip-background: rgba(255,255,255,0.8);
     --tooltip-foreground: rgba(51, 51, 51, 1);
 
@@ -163,7 +172,9 @@ body {
                         rgb(0 0 0 / 0%) 0px 0px 0px 0px,
                         rgb(0 0 0 / 0%) 0px 0px 0px 0px,
                         rgb(60 66 87 / 8%) 0px 2px 5px 0px;
-    --color-fg-blue: #54bbec;
+    // --color-fg-blue: #54bbec;
+    --color-fg-blue: rgb(49, 130, 189); //#3182bd;
+    --color-bg-blue: rgb(49, 130, 189, 0.15); //#3182bd;
     --notification-box-bg: rgba(0, 0, 0, 0.2);
     --notification-box-border: rgba(255, 255, 255, 0.1);
   }
@@ -179,6 +190,7 @@ body {
   .pill-button {
     padding: 4px;
     position: relative;
+    white-space: nowrap;
     &:not(:first-child)::before {
       border-left: 1px solid var(--border-color);
       content: "";
@@ -221,10 +233,13 @@ body {
   font-weight: 500;
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 1px 0px, rgb(40, 40, 40) 0px 0px 0px 1px, rgba(60, 66, 87, 0.12) 0px 2px 5px 0px;
   /* background: #474747; */
   user-select: none;
   border-radius: 6px;
+  border: none;
+  cursor: pointer;
   &:hover {
     color: var(--button-color);
     background: var(--button-background-color-hover);
@@ -233,4 +248,37 @@ body {
 
 input, textarea {
   font-size: 14px;
+}
+
+.right-sidebar-section {
+  border-bottom: 1px solid var(--border-color);
+  .sidebar-heading {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-fg-muted);
+  }
+}
+
+.open-button {
+  text-decoration: none;
+  border: none;
+  border-radius: 6px;
+  /* background-color: rgba(51, 51, 51, 0.05); */
+  padding: 5px 10px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background-color: var(--top-bar-background-hover);
+    color: inherit;
+  }
+}
+
+::selection {
+    background-color: #0b52a6 !important;
+    color: #dfddda !important;
+}
+::-moz-selection {
+    background-color: #0b52a6 !important;
+    color: #dfddda !important;
 }

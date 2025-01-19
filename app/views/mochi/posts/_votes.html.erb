@@ -1,0 +1,23 @@
+<% if post.post_type.has_votes %>
+  <div class="post--votes">
+    <% existing_vote = my_vote(post) %>
+    <button class="vote-button pill-vote-button button <%= (existing_vote&.vote_type == 1) ? 'active' : '' %>"
+            data-vote-type="1" data-post-id="<%= post.id %>"
+            data-vote-id="<%= existing_vote&.id %>"
+            id="post-<%= post.id %>-up" aria-label="Upvote">
+      <%= octicon 'arrow-up', :height => 16,  :class => "upvote-icon", :"aria-label" => "Upvote" %>
+      <span class="js-upvote-count"><%= post.upvote_count + 1 %></span>
+    </button>
+
+    <div class="vote-holder" style="display: none;">
+      <% unless post.locked? %>
+        <button class="vote-button pill-vote-button button  <%= (existing_vote&.vote_type == 1) ? 'active' : '' %>"
+                data-vote-type="1" data-post-id="<%= post.id %>" data-vote-id="<%= existing_vote&.id %>" id="post-<%= post.id %>-up" aria-label="Upvote">
+
+          <%= octicon 'arrow-up', :height => 16,  :class => "upvote-icon", :"aria-label" => "All posts" %>
+        </button>
+      <% end %>
+      <span class="js-upvote-count button-label"><%= post.upvote_count %></span>
+    </div>
+  </div>
+<% end %>

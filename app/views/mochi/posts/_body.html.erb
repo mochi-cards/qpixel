@@ -1,0 +1,31 @@
+<% user = post.user %>
+
+<div style="display: flex; justify-content: space-between;">
+  <div class="post-byline">
+    <strong style="color: var(--color-fg);"><%= user_name post.user %></strong>
+    <% if user.is_admin %>
+      <span class="user-label">Admin</span>
+    <% elsif user.is_moderator %>
+      <span class="user-label">Mod</span>
+    <% end %>
+    <% if user.staff? %>
+      <span class="user-label">Staff</span>
+    <% end %>
+    <%= time_ago_in_words(post.created_at) %> ago
+
+  </div>
+  <% if user == current_user %>
+    <%= link_to edit_post_path(post), class: '' do %>
+      Edit post
+    <% end %>
+  <% end %>
+</div>
+
+<div class="post-body">
+  <%= raw(sanitize(post.body, scrubber: scrubber)) %>
+</div>
+
+<!-- Cannot have whitespace with :empty selector -->
+<div class="post-footer"><%= render 'mochi/posts/reactions', post: post, main_post: main_post %><%= render 'mochi/posts/votes', post: post %><%= render 'mochi/posts/tags', post: post %></div>
+
+<div class="post-separator"></div>

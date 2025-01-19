@@ -2,8 +2,12 @@
 <% pingable = false %>
 
 <div class="<%= comment_thread.deleted ? 'is-red' : '' %>" data-deleted="<%= comment_thread.deleted %>"
+  style="padding-top: 8px;"
      data-archived="<%= comment_thread.archived %>" data-thread="<%= comment_thread.id %>"
      data-comments="<%= comment_thread.reply_count %>">
+
+  <!-- Widget -->
+  <!--
   <div class="widget--header">
     <% if current_user&.privilege? 'flag_curate' %>
       <a href="#" class="widget--header-link" data-drop=".js--tools-thread-<%= comment_thread.id %>"><i class="fa fa-cog fa-fw"></i>tools</a>
@@ -29,8 +33,11 @@
       <i class="fas fa-lock fa-fw" title="Locked. This thread has been locked and cannot be modified."></i>
     <% end %>
   </div>
+  -->
+
   <% skipped_deleted = 0 %>
   <% comments = comment_thread.comments %>
+
   <% if params[:inline] == 'true' %>
     <% count = 0 %>
     <% comments = comments.take_while do |comment| %>
@@ -38,6 +45,7 @@
       <% count <= 5 %>
     <% end %>
   <% end %>
+
   <% comments.each do |comment| %>
     <% if comment.deleted && !(current_user&.is_moderator && params[:show_deleted_comments] == "1") %>
       <% skipped_deleted += 1%>
@@ -81,13 +89,15 @@
             <%= text_area_tag :content, '', class: 'form-element js-comment-field', placeholder: 'Write a comment',
                               data: { thread: comment_thread.id, post: comment_thread.post_id,
                                       character_count: ".js-character-count-#{post.id}" } %>
+
             <span class="js-character-count-<%= post.id %>"
+                  style="display: none;"
                   data-max="1000" data-min="15">
               <i class="fas fa-ellipsis-h js-character-count__icon"></i>
               <span class="js-character-count__count">0 / 1000</span>
             </span>
 
-            <%= submit_tag 'Add reply', class: 'button is-muted is-filled', disabled:true %>
+            <%= submit_tag 'Add reply', class: 'button is-muted is-filled', disabled:true, style: "display: none;" %>
           <% end %>
         <% end %>
       <% elsif comment_thread.deleted %>
@@ -111,103 +121,5 @@
 </div>
 
 <!-- thread actions -->
-<% if current_user&.privilege?('flag_curate') && params[:inline] != 'true' %>
-  <div class="droppanel js--tools-thread-<%= comment_thread.id %>">
-    <div class="droppanel--header">thread options</div>
-    <div class="droppanel--menu">
-      <% if current_user.is_moderator || !comment_thread.read_only? %>
-        <a href="#" data-modal=".js--rename-thread-<%= comment_thread.id %>" data-drop=".js--tools-thread-<%= comment_thread.id %>"><i class="fas fa-pen fa-fw"></i> rename</a>
-      <% end %>
-
-      <!-- lock / unlock -->
-      <% unless comment_thread.archived || comment_thread.deleted %>
-        <% if comment_thread.locked? %>
-          <a href="#" class="js--unrestrict-thread" data-action="lock" data-drop=".js--tools-thread-<%= comment_thread.id %>" data-thread="<%= comment_thread.id %>"><i class="fas fa-lock fa-fw"></i> unlock</a>
-        <% else %>
-          <a href="#" data-modal=".js--lock-thread-<%= comment_thread.id %>" data-drop=".js--tools-thread-<%= comment_thread.id %>"><i class="fas fa-lock fa-fw"></i> lock</a>
-        <% end %>
-      <% end %>
-
-      <!-- archive/restore -->
-      <% unless comment_thread.locked? || comment_thread.deleted %>
-        <% if comment_thread.archived %>
-          <a href="#" class="js--unrestrict-thread" data-action="archive" data-drop=".js--tools-thread-<%= comment_thread.id %>" data-thread="<%= comment_thread.id %>"><i class="fas fa-archive fa-fw"></i> restore</a>
-        <% else %>
-          <a href="#" class="js--restrict-thread" data-action="archive" data-drop=".js--tools-thread-<%= comment_thread.id %>" data-thread="<%= comment_thread.id %>"><i class="fas fa-archive fa-fw"></i> archive</a>
-        <% end %>
-      <% end %>
-
-      <!-- Delete/undelete -->
-      <% unless comment_thread.locked? || comment_thread.archived %>
-        <% if comment_thread.deleted %>
-          <a href="#" class="js--unrestrict-thread" data-action="delete" data-drop=".js--tools-thread-<%= comment_thread.id %>" data-thread="<%= comment_thread.id %>"><i class="fas fa-trash fa-fw"></i> undelete</a>
-        <% else %>
-          <a href="#" class="js--restrict-thread" data-action="delete" data-drop=".js--tools-thread-<%= comment_thread.id %>" data-thread="<%= comment_thread.id %>"><i class="fas fa-trash fa-fw"></i> delete</a>
-        <% end %>
-      <% end %>
-
-      <!-- followers -->
-      <% if current_user&.is_moderator || current_user&.is_admin %>
-        <a href="#" class="js--show-followers" data-modal="#js-followers-<%= comment_thread.id %>"
-           data-drop=".js--tools-thread-<%= comment_thread.id %>" data-thread="<%= comment_thread.id %>">
-          <i class="fas fa-users"></i> followers
-        </a>
-      <% end %>
-    </div>
-  </div>
-
-  <!-- Rename stuff? -->
-  <div class="modal is-with-backdrop is-small js--rename-thread-<%= comment_thread.id %>">
-    <%= form_tag rename_comment_thread_path(comment_thread.id), class: 'modal--container' do %>
-      <div class="modal--header">
-        <button type="button" class="button is-close-button modal--header-button" data-modal=".js--rename-thread-<%= comment_thread.id %>">&times;</button>
-        Rename...
-      </div>
-      <div class="modal--body">
-        <%= label_tag :title, 'Title', class: 'form-element' %>
-        <%= text_field_tag :title, comment_thread.title, class: 'form-element' %>
-      </div>
-      <div class="modal--footer">
-        <%= submit_tag 'Update thread', class: 'button is-muted is-filled' %>
-        <button type="button" class="button is-muted" data-modal=".js--rename-thread-<%= comment_thread.id %>">Cancel</button>
-      </div>
-    <% end %>
-  </div>
-
-  <!-- Lock stuff? -->
-  <div class="modal is-with-backdrop is-small js--lock-thread-<%= comment_thread.id %>">
-    <%= form_tag restrict_comment_thread_path(comment_thread.id), class: 'modal--container' do %>
-      <%= hidden_field_tag :type, 'lock' %>
-      <div class="modal--header">
-        <button type="button" class="button is-close-button modal--header-button" data-modal=".js--lock-thread-<%= comment_thread.id %>">&times;</button>
-        Lock...
-      </div>
-      <div class="modal--body">
-        <%= label_tag :duration, 'Duration in days (optional)', class: 'form-element' %>
-        <div class="form-caption">You may enter a lock duration in days. If you leave this blank, the thread will need to be unlocked manually.</div>
-        <%= number_field_tag :duration, nil, class: 'form-element' %>
-      </div>
-      <div class="modal--footer">
-        <%= submit_tag 'Lock thread', class: 'button is-muted is-filled' %>
-        <button type="button" class="button is-muted" data-modal=".js--lock-thread-<%= comment_thread.id %>">Cancel</button>
-      </div>
-    <% end %>
-  </div>
-
-  <!-- Mod tools -->
-  <% if current_user&.is_moderator || current_user&.is_admin %>
-    <div class="modal is-with-backdrop is-small" id="js-followers-<%= comment_thread.id %>">
-      <div class="modal--container">
-        <div class="modal--header">
-          <button type="button" class="button is-close-button modal--header-button" data-modal="#js-followers-<%= comment_thread.id %>">&times;</button>
-          Thread Followers
-        </div>
-        <div class="modal--body js-follower-display">
-          Loading...
-        </div>
-      </div>
-    </div>
-  <% end %>
-<% end %>
 
 <!-- THREAD ENDS ABOVE -->

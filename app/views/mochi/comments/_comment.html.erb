@@ -37,9 +37,9 @@
         </div>
       </div>
     <% end %>
-    <div class="post-header">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <%= render 'posts/user_byline_mochi', user: comment.user, post: comment %>
+    <div class="post-header" style="padding-top: 0;">
+      <div style="display: flex; align-items: center; gap: 6px;">
+        <%= render 'mochi/posts/user_byline', user: comment.user, post: comment %>
         <% if comment.updated_at > comment.created_at %>
           · <span title="<%= comment.updated_at.iso8601 %>">edited <%= time_ago_in_words(comment.updated_at) %> ago</span>
         <% end %>
@@ -71,9 +71,11 @@
       <% end %>
     </div>
   </div>
-  <div class="post-body" style="padding-top: 0; display: flex;">
-    <div style="width: 2px; margin: 0 calc(15px + 8px) 0 15px; background-color: var(--color-fg-muted);">
+  <div style="display: flex; padding-left: 16px;">
+    <div style="width: 2px; margin: 0 calc(15px + 8px) 0 15px; background-color: var(--border-color);">
     </div>
-    <%= render_pings(raw(sanitize(render_comment_helpers(render_markdown(comment.content)), scrubber: CommentScrubber.new)), pingable: pingable) %>
+    <div class="post-body" style="padding: 0; padding-bottom: 16px;">
+      <%= render_pings(raw(sanitize(render_comment_helpers(render_markdown(comment.content)), scrubber: CommentScrubber.new)), pingable: pingable) %>
+    </div>
   </div>
 </div>

@@ -7,6 +7,9 @@
 
 .mochi--drop-down-menu {
   position: absolute;
+  top: 30px;
+  right: 0;
+  z-index: 1;
   display: none;
   padding: 8px;
   border-radius: 6px;

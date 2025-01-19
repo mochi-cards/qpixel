@@ -1,4 +1,4 @@
-<div class="form-group">
+<div class="form-group" style="padding: 0 8px 8px;">
 
   <% if block_given? %>
     <span class="form-caption"><%= yield %></span>
@@ -20,10 +20,18 @@
         end[1]
       %>
     <% end %>
-    <%= render 'shared/markdown_tools' %>
     <%= f.text_area field_name, **({ class: classes, rows: 15, placeholder: 'Start typing your post...' }).merge(value), 
                                 data: { character_count: ".js-character-count-post-body" } %>
-    <%= render 'mochi/posts/mdhint' %>
+    <div class="form-caption widget--footer js-post-field-footer">
+      <a href="https://www.markdownguide.org/" target="_blank" class="md-link">
+        <%= octicon "markdown", :height => 16,  :class => "category-icon", :"aria-label" => "Markdown" %>
+        Markdown supported
+      </a>
+      <div class="md-link js-draft-msg">
+        <%= octicon "check", :height => 16,  :class => "category-icon", :"aria-label" => "Markdown" %>
+        Draft loaded. You had edited this before but haven't saved it.
+      </div>
+    </div>
   </div>
 
   <%= hidden_field_tag "__html", nil, class: 'js-post-html' %>

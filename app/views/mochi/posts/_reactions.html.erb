@@ -1,0 +1,40 @@
+<% user_reactions_types = post.reactions.where(user: current_user).map { |r| r.reaction_type } %>
+<% post_reactions_types = post.reactions.map { |r| r.reaction_type } %>
+<% answered = main_post.reactions.any? || main_post.children.any? { |p| p.reactions.any? } %>
+<% if post.post_type.has_reactions && post.post_type.reactions.any? && !post.locked? %>
+  <% post.post_type.reactions.each do |rt| %>
+    <% if post_reactions_types.include?(rt) || (!answered && current_user == main_post.user) %>
+      <input class="form-radio-element reaction-type" type="radio" name="reaction-type"
+              value="<%= rt.id %>"
+              id="reaction-type-input-<%= post.id %>-<%= rt.id %>"
+              style="display: none;"
+              checked
+              <%= rt.requires_comment ? 'data-reaction-require-comment' : '' %>
+              <%= 'disabled' if user_reactions_types.include? rt %>>
+    <% end %>
+    <% if post_reactions_types.include? rt %>
+      <% if user_reactions_types.include? rt %>
+        <a href="#" class="reaction-retract answer-button answered" data-reaction="<%= rt.id %>" data-post="<%= post.id %>">
+          <%= octicon 'check-circle-fill', :height => 16,  :class => "upvote-icon", :"aria-label" => "Unmark as answer" %>
+          <span class="button-label">
+            Unmark as answer
+          </span>
+        </a>
+      <% else %>
+        <div class="answer-button answered">
+          <%= octicon 'check-circle-fill', :height => 16,  :class => "upvote-icon", :"aria-label" => "Marked as answer" %>
+          <span class="button-label">
+            Marked as answer
+          </span>
+        </div>
+      <% end %>
+    <% elsif !answered && current_user == main_post.user %>
+      <button type="button" class="button is-filled js-mochi-reaction-submit answer-button" data-post-id="<%= post.id %>">
+        <%= octicon 'check-circle', :height => 16,  :class => "upvote-icon", :"aria-label" => "Mark as answer" %>
+        <span class="button-label">
+          Mark as answer
+        </span>
+      </button>
+    <% end %>
+  <% end %>
+<% end %>

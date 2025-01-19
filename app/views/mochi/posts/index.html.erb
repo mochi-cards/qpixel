@@ -6,34 +6,8 @@
   }
 %>
 
-<div style="display: grid; grid-template-columns: 256px 1fr;">
-  <div class="category-sidebar">
-    <ul class="category-list">
-      <h2 style="font-size: 16px;">Categories</h2>
-      <li>
-        <%= link_to posts_path, class: "category-link" do %>
-          <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
-
-          All posts
-        <% end %>
-      </li>
-      <% @header_categories.each do |cat| %>
-        <% next unless (current_user&.trust_level || 0) >= (cat.min_view_trust_level || -1) %>
-        <li>
-          <%= link_to category_path(cat), class: "category-link #{active?(cat) ? 'active' : ''}" do %>
-            <% icon_name = "hash" %>
-            <% if icon_name %>
-              <%= octicon icon_name, :height => 16,  :class => "category-icon", :"aria-label" => cat.name %>
-            <% end %>
-            <%= cat.name %>
-            <% if user_signed_in? && cat.new_posts_for?(current_user) %>
-              <span class="badge is-status" title="unread activity in category"></span>
-            <% end %>
-          <% end %>
-        </li>
-      <% end %>
-    </ul>
-  </div>
+<div style="display: grid; grid-template-columns: 200px 1fr;">
+  <%= render 'mochi/categories/list' %>
 
   <div>
 
@@ -52,6 +26,44 @@
       <p>
         Viewing all posts across all categories.
       </p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="category-toolbar">
+
+      <!-- Sorting -->
+      <div class="pills-container">
+        <div class="pill-button">
+          <%= link_to 'Trending', query_url(sort: 'activity'),
+                      class: "#{(params[:sort].nil?) && !current_page?(questions_lottery_path) || params[:sort] == 'activity' ? 'active' : ''}",
+                      title: 'most recent changes: new posts, edits, close/open, delete/undelete' %>
+        </div>
+        <div class="pill-button">
+          <%= link_to 'Recent', query_url(sort: 'age'),
+                      class: "#{params[:sort] == 'age' ? 'active' : ''}",
+                      title: 'newest posts (ignores other activity)' %>
+        </div>
+        <div class="pill-button">
+          <%= link_to 'Most Voted', query_url(sort: 'score'),
+                      class: "#{params[:sort] == 'score' ? 'active' : ''}",
+                      title: 'highest score first (not the same as net votes)' %>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <%= form_tag search_path, method: :get, role: 'search', class: 'category-search' do %>
+        <%= octicon 'search', :height => 16, :"aria-label" => "Search this category" %>
+        <%= search_field_tag :search, params[:search], class: 'form-element', placeholder: "Search all posts" %>
+      <% end %>
+
+      <!-- New post button -->
+      <% if false %>
+        <% current_cat = current_category %>
+        <%= link_to category_post_types_path(current_cat.id),
+                    class: 'category-header--nav-item mochi-button is-button' do %>
+          <%= current_cat.button_text.present? ? current_cat.button_text : 'New Post' %>
+        <% end %>
+      <% end %>
     </div>
 
 

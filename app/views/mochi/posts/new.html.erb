@@ -1,0 +1,31 @@
+<div style="display: grid; grid-template-columns: 200px 1fr;">
+
+  <%= render 'mochi/categories/list' %>
+
+  <div>
+
+    <!-- Headline -->
+    <h1 class="new-post">
+      New Post
+      <% if @category.present? %>
+        in <%= @category.name %>
+      <% end %>
+    </h1>
+
+    <!-- Errors -->
+    <% if @post.errors.any? %>
+      <div class="notice is-danger is-filled">
+        <p>The following errors prevented your post from being saved:</p>
+        <ul>
+          <% @post.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= render 'mochi/posts/form', post: @post, post_type: @post_type, category: @category, submit_path: request.path %>
+
+  </div>
+</div>
+

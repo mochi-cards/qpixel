@@ -29,13 +29,21 @@
 <!-- =============== START MOCHI ======================== -->
 
 <!-- post--votes class needed by votes.js -->
-<div id="post-<%= post.id %>" class="post" data-post-id="<%= post.id %>">
+<div id="post-<%= post.id %>" class="post" data-post-id="<%= post.id %>"  style="padding: 16px 0;">
   <% unless title.blank? %>
     <h1 class="title">
       <span class="post--title-text"><%= title %></span>
     </h1>
     <div class="post-byline">
       <strong><%= user_link post.user %></strong>
+      <% if user.is_admin %>
+        <span class="user-label">Admin</span>
+      <% elsif user.is_moderator %>
+        <span class="user-label">Mod</span>
+      <% end %>
+      <% if user.staff? %>
+        <span class="user-label">Staff</span>
+      <% end %>
       posted in
       <span class="sign-up-to-post category-tag" style="font-weight: 500; color: var(--color-fg); fill: var(--color-fg-subtle); display: inline-flex; align-items: center; gap: 3px;">
         <%= octicon "hash", :height => 12,  :class => "category-icon", :"aria-label" => category.name %>
@@ -49,8 +57,8 @@
         <%= render 'mochi/posts/user_byline', user: user, post: post %>
       </div>
 
-      <button class="mochi--toggle-drop-down" data-drop-down-id="post-actions-<%= post.id %>"
-        style="position: relative;">
+      <button class="mochi--toggle-drop-down open-button" data-drop-down-id="post-actions-<%= post.id %>"
+        style="position: relative; fill: var(--color-fg-muted);">
         <%= octicon 'kebab-horizontal', :height => 16, :"aria-label" => "Actions" %>
         <div class="post--actions mochi--drop-down-menu" data-drop-down-id="post-actions-<%= post.id %>">
           <ul>
@@ -193,7 +201,7 @@
                   data-vote-id="<%= existing_vote&.id %>"
                   id="post-<%= post.id %>-up" aria-label="Upvote">
             <%= octicon 'arrow-up', :height => 16,  :class => "upvote-icon", :"aria-label" => "Upvote" %>
-            <span class="js-upvote-count"><%= post.upvote_count %></span>
+            <span class="js-upvote-count"><%= post.upvote_count + 1 %></span>
           </button>
 
           <div class="vote-holder" style="display: none;">
@@ -208,6 +216,7 @@
             <span class="js-upvote-count"><%= post.upvote_count %></span>
           </div>
 
+          <!--
           <% if user_signed_in? && post.post_type.has_reactions && post.post_type.reactions.any? %>
             <div class="post--react has-text-align-center">
               <% unless post.locked? %>
@@ -221,18 +230,24 @@
               <% end %>
             </div>
           <% end %>
+          -->
         <% end %>
       </div>
-      <span class="comment-count">
-        <%= pluralize(comment_thread&.reply_count, 'comment') %>
-      </span>
+
+      <% if true || post_type.has_votes %>
+        <span class="comment-count">
+          <%= pluralize(comment_thread&.reply_count, 'comment') %>
+        </span>
+      <% end %>
     </div>
-    <% if comment_thread %>
-      <div class="post-comments">
-        <%= render 'mochi/comments/thread', comment_thread: comment_thread %>
-      </div>
-    <% else %>
-      <%= render 'mochi/comments/new_thread_modal', post: post %>
+    <% if true || post_type.has_votes %>
+      <% if comment_thread %>
+        <div class="post-comments">
+          <%= render 'mochi/comments/thread', comment_thread: comment_thread %>
+        </div>
+      <% else %>
+        <%= render 'mochi/comments/new_thread_modal', post: post %>
+      <% end %>
     <% end %>
   </div>
 </div>

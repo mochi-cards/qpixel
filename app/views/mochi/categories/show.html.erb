@@ -7,48 +7,14 @@
   }
 %>
 
-<div style="display: grid; grid-template-columns: 256px 1fr;">
-  <div class="category-sidebar">
-    <ul class="category-list">
-      <h2 style="font-size: 16px;">Categories</h2>
-      <li>
-        <%= link_to posts_path, class: "category-link" do %>
-          <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
+<div style="display: grid; grid-template-columns: 200px 1fr;">
 
-          All posts
-        <% end %>
-      </li>
-      <% @header_categories.each do |cat| %>
-        <% next unless (current_user&.trust_level || 0) >= (cat.min_view_trust_level || -1) %>
-        <li>
-          <%= link_to category_path(cat), class: "category-link #{active?(cat) ? 'active' : ''}" do %>
-            <% icon_name = "hash" %>
-            <% if icon_name %>
-              <%= octicon icon_name, :height => 16,  :class => "category-icon", :"aria-label" => cat.name %>
-            <% end %>
-            <%= cat.name %>
-            <% if user_signed_in? && cat.new_posts_for?(current_user) %>
-              <span class="badge is-status" title="unread activity in category"></span>
-            <% end %>
-          <% end %>
-        </li>
-      <% end %>
+  <%= render 'mochi/categories/list' %>
 
-      <% if current_user&.is_admin %>
-        <li>
-          <%= link_to 'Edit Category', edit_category_path(@category) %>
-        </li>
-      <% end %>
-
-      <li style="display: none;">
-        <%= link_to 'Subscribe',
-                    new_subscription_path(type: 'category', qualifier: @category.id, return_to: request.path),
-                    class: 'button is-outlined' %>
-      </li>
-    </ul>
-  </div>
-
+  <!-- Posts list -->
   <div>
+
+    <!-- Title -->
     <h2 class="category-title">
       <% icon_name = icon_names[@category.name] %>
       <% if icon_name %>
@@ -59,6 +25,7 @@
       <%= @category.name %>
     </h2>
 
+    <!-- Description -->
     <% if @category.short_wiki %>
       <div class="category-description" data-category-id="<%= @category.id %>">
         <% cache [@category, 'description-rendered'] do %>
@@ -69,7 +36,10 @@
 
     <% post_count = @posts.count %>
 
+    <!-- Toolbar -->
     <div class="category-toolbar">
+
+      <!-- Sorting -->
       <div class="pills-container">
         <div class="pill-button">
           <%= link_to 'Trending', query_url(sort: 'activity'),
@@ -86,21 +56,15 @@
                       class: "#{params[:sort] == 'score' ? 'active' : ''}",
                       title: 'highest score first (not the same as net votes)' %>
         </div>
-        <% if SiteSetting['AllowContentTransfer'] %>
-          <div class="pill-button">
-            <%= link_to 'Native', query_url(sort: 'native'),
-                        class: "#{params[:sort] == 'native' ? 'active' : ''}",
-                        title: 'exclude imported posts' %>
-          </div>
-        <% end %>
-        <% if @category.name == 'Q&A' %>
-          <div class="pill-button">
-            <%= link_to 'Random', query_url(sort: 'lottery'),
-                        class: "#{params[:sort] == 'lottery' ? 'active' : ''}",
-                        title: 'random set of questions, usually older ones' %>
-          </div>
-        <% end %>
       </div>
+
+      <!-- Search -->
+      <%= form_tag search_path, method: :get, role: 'search', class: 'category-search' do %>
+        <%= octicon 'search', :height => 16, :"aria-label" => "Search this category" %>
+        <%= search_field_tag :search, params[:search], class: 'form-element', placeholder: "Search all posts" %>
+      <% end %>
+
+      <!-- New post button -->
       <% current_cat = current_category %>
       <%= link_to category_post_types_path(current_cat.id),
                   class: 'category-header--nav-item mochi-button is-button' do %>
@@ -108,7 +72,7 @@
       <% end %>
     </div>
 
-    <div style="display: none;>
+    <div style="display: none;">
       <%= short_number_to_human post_count, precision: 1, significant: false %>
       <%= 'post'.pluralize(post_count) %> &middot;
 
@@ -134,22 +98,50 @@
       <% end %>
     </details>
 
+    <!-- Posts -->
     <div class="item-list">
       <% @posts.each do |post| %>
         <%= render 'mochi/posts/type_agnostic', post: post %>
       <% end %>
     </div>
 
-    <div class="has-padding-top-4">
+    <!-- Subscribe to RSS -->
+    <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between;">
       <%= will_paginate @posts, renderer: BootstrapPagination::Rails %>
-    </div>
-
-    <div class="has-padding-top-4">
       <%= link_to category_feed_path(@category, format: 'rss'), class: 'category-rss-link' do %>
         <%= octicon 'rss', :height => 16, :"aria-label" => "Subscribe to RSS feed" %>
         Subscribe to RSS feed
       <% end %>
     </div>
+  </div>
+
+  <div style="display: none;">
+    <div class="right-sidebar-section">
+      <div class="sidebar-heading">
+        Admin tools
+      </div>
+      <% if current_user&.is_admin %>
+        <li>
+          <%= link_to 'Edit Category', edit_category_path(@category) %>
+        </li>
+      <% end %>
+    </div>
+
+    <% if moderator? || admin? %>
+      <div class="widget has-margin-4">
+        <h4 class="widget--header has-margin-0">Moderator Tools</h4>
+        <div class="widget--body">
+          <ul>
+            <% if moderator? %>
+              <li><%= link_to 'Moderator Tools', moderator_path %></li>
+            <% end %>
+            <% if admin? %>
+              <li><%= link_to 'Admin Tools', admin_path %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
 
