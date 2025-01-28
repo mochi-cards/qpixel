@@ -16,12 +16,9 @@
 
     <!-- Title -->
     <h2 class="category-title">
-      <% icon_name = icon_names[@category.name] %>
-      <% if icon_name %>
-        <%= octicon 'hash', :height       => 20,
-                            :class        => "category-icon",
-                            :"aria-label" => @category.name %>
-      <% end %>
+      <%= octicon 'hash', :height       => 20,
+                          :class        => "category-icon",
+                          :"aria-label" => @category.name %>
       <%= @category.name %>
     </h2>
 
@@ -72,6 +69,7 @@
       <% end %>
     </div>
 
+    <!-- Edit category -->
     <div style="display: none;">
       <%= short_number_to_human post_count, precision: 1, significant: false %>
       <%= 'post'.pluralize(post_count) %> &middot;
@@ -86,6 +84,7 @@
                   class: 'button is-outlined' %>
     </div>
 
+    <!-- Filters -->
     <details style="display: none;">
       <summary>Filters (<%= @filtered ? @active_filter[:name] || 'Custom' : 'None' %>)</summary>
       <% if @active_filter[:default] == true %>

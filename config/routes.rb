@@ -17,7 +17,7 @@ Rails.application.routes.draw do
     get  'users/saml/after_sign_in_check',            to: 'users/saml_sessions#after_sign_in_check', as: :after_sign_in_check
   end
 
-  root                                     to: 'categories#homepage'
+  root                                     to: 'posts#index'
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?  
   

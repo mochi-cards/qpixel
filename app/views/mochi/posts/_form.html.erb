@@ -29,19 +29,27 @@
 -->
 
 <div>
-  <% if post.post_type.has_reactions && post.post_type.reactions.any? %>
-    <h3>Suggest an answer</h2>
-  <% else %>
-    <h3>Add a reply</h2>
+  <% if false && post_type.has_parent? %>
+    <% if post.post_type.has_reactions && post.post_type.reactions.any? && post.parent %>
+      <h3 class="body-label">Suggest an answer</h2>
+    <% else %>
+      <h3 class="body-label">Add a reply</h2>
+    <% end %>
   <% end %>
+
+  <%= form_tag upload_path, multipart: true, id: 'upload-form', class: 'form-inline upload-form js-upload-form', style: "margin: 0; fill:currentColor;" do %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    <%= file_field_tag :file, class: "form-element", style: "display: none;" %>
+  <% end %>
+
   <%= form_for post, url: submit_path, html: { class: 'has-margin-top-4' } do |f| %>
 
     <% unless post_type.has_parent? %>
       <div class="form-group post-title">
-        <%= f.label :title, "Title", class: 'form-element' %>
+        <%= f.label :title, "Add a title", class: 'form-element' %>
         <%= f.text_field :title, class: 'form-element post_title', data: { character_count: ".js-character-count-post-title" } %>
       </div>
-      <div>
+      <div style="display: none;">
         <span class="has-float-right has-font-size-caption js-character-count-post-title hide"
               data-max="255" data-min="15" data-display-at="0.75">
           <i class="fas fa-ellipsis-h js-character-count__icon"></i>
@@ -51,28 +59,40 @@
     <% end %>
 
     <!-- Tags -->
-    <% if post_type.has_tags? && category.present? %>
-      <div class="form-group post-tags">
-        <%= f.label :tags_cache, t('posts.tags_label'), class: 'form-element' %>
-        <% required_tags = category.required_tags.to_a %>
-        <% unless required_tags.empty? %>
-          <span class="form-caption">
-            <%= t('posts.required_tags_caption') %>
-            <% required_tags.each do |tag| %>
-              <a class="badge is-tag is-filled js-add-required-tag" href="javascript:void(0)" data-tag-id="<%= tag.id %>"
-                 data-tag-name="<%= tag.name %>">
-                <%= tag.name %>
-              </a>
-            <% end %>
-          </span>
-        <% end %>
-        <%= f.select :tags_cache, options_for_select(post.tags_cache.map { |t| [t, t] }, selected: post.tags_cache),
-                     { include_blank: true }, multiple: true, class: "form-element js-tag-select",
-                     data: { tag_set: category.tag_set_id } %>
-      </div>
-    <% end %>
+    <div style="display: none;">
+      <% if post_type.has_tags? && category.present? %>
+        <div class="form-group post-tags">
+          <%= f.label :tags_cache, t('posts.tags_label'), class: 'form-element' %>
+          <% required_tags = category.required_tags.to_a %>
+          <% unless required_tags.empty? %>
+            <span class="form-caption">
+              <%= t('posts.required_tags_caption') %>
+              <% required_tags.each do |tag| %>
+                <a class="badge is-tag is-filled js-add-required-tag" href="javascript:void(0)" data-tag-id="<%= tag.id %>"
+                   data-tag-name="<%= tag.name %>">
+                  <%= tag.name %>
+                </a>
+              <% end %>
+            </span>
+          <% end %>
+          <%= f.select :tags_cache, options_for_select(post.tags_cache.map { |t| [t, t] }, selected: post.tags_cache),
+                       { include_blank: true }, multiple: true, class: "form-element js-tag-select",
+                       data: { tag_set: category.tag_set_id } %>
+        </div>
+      <% end %>
+    </div>
 
     <!-- Post body -->
+    <% if post_type.has_parent? %>
+      <% if post.post_type.has_reactions && post.post_type.reactions.any? && post.parent %>
+        <h3 class="body-label">Suggest an answer</h3>
+      <% else %>
+        <h3 class="body-label">Add a reply</h3>
+      <% end %>
+    <% else %>
+      <h3 class="body-label">Add a body</h3>
+    <% end %>
+
     <div class="post-container">
       <%= render 'mochi/shared/markdown_tools' %>
 
@@ -159,12 +179,12 @@
     <!-- Submit -->
     <div class="post-form actions">
       <%= link_to t('g.cancel').titlecase, cancel_redirect_path(post),
-                  class: 'button is-muted is-outlined is-danger js-cancel-edit',
+                  class: 'button is-muted is-outlined is-danger js-cancel-edit open-button lg',
                   data: { question_body: t('posts.unsaved_changes_confirmation') } %>
       <% if post_type.has_parent? %>
-        <input type="submit" form="new_post" value="Reply" class="button mochi-button">
+        <input type="submit" form="new_post" value="Reply" class="button mochi-button lg">
       <% else %>
-        <input type="submit" form="new_post" value="Post" class="button mochi-button">
+        <input type="submit" form="new_post" value="Post" class="button mochi-button lg">
       <% end %>
 
     </div>

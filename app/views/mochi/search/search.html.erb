@@ -1,0 +1,95 @@
+<% content_for :title, 'Search' %>
+
+<div style="display: grid; grid-template-columns: 200px 1fr;">
+
+  <%= render 'mochi/categories/list' %>
+
+  <!-- Posts list -->
+  <div>
+
+    <!-- Title -->
+    <h2 class="category-title">
+      Search results
+    </h2>
+
+    <!-- Description -->
+    <div class="category-description">
+      <p>
+        Search results here.
+      </p>
+    </div>
+
+    <% post_count = @posts.count %>
+
+    <!-- Toolbar -->
+    <div class="category-toolbar">
+
+      <!-- Sorting -->
+      <div class="pills-container">
+        <div class="pill-button">
+          <%= link_to 'Trending', query_url(sort: 'activity'),
+                      class: "#{(params[:sort].nil?) && !current_page?(questions_lottery_path) || params[:sort] == 'activity' ? 'active' : ''}",
+                      title: 'most recent changes: new posts, edits, close/open, delete/undelete' %>
+        </div>
+        <div class="pill-button">
+          <%= link_to 'Recent', query_url(sort: 'age'),
+                      class: "#{params[:sort] == 'age' ? 'active' : ''}",
+                      title: 'newest posts (ignores other activity)' %>
+        </div>
+        <div class="pill-button">
+          <%= link_to 'Most Voted', query_url(sort: 'score'),
+                      class: "#{params[:sort] == 'score' ? 'active' : ''}",
+                      title: 'highest score first (not the same as net votes)' %>
+        </div>
+      </div>
+
+      <!-- Search -->
+      <%= form_tag search_path, method: :get, role: 'search', id: 'search', class: 'category-search' do %>
+        <%= octicon 'search', :height => 16, :"aria-label" => "Search this category" %>
+        <%= search_field_tag :search, params[:search], class: 'form-element', placeholder: "Search all posts" %>
+      <% end %>
+      <input type="submit" form="search" value="Search" class="button mochi-button lg">
+    </div>
+
+    <% if @posts.size == 0 %>
+      <p class="no-results"><em>No results for <strong><%= params[:search] %></strong>. Try using a different search term.</em></p>
+    <% end %>
+
+    <!-- Posts -->
+    <div class="item-list">
+      <% @posts.each do |post| %>
+        <% next if post.nil? %>
+        <%= render 'mochi/posts/type_agnostic', post: post %>
+      <% end %>
+    </div>
+
+    <!-- Pagination -->
+    <% unless @posts.nil? %>
+      <%= will_paginate @posts, renderer: BootstrapPagination::Rails %>
+    <% end %>
+  </div>
+
+  <div style="display: none;">
+    <div class="right-sidebar-section">
+      <div class="sidebar-heading">
+        Admin tools
+      </div>
+    </div>
+
+    <% if moderator? || admin? %>
+      <div class="widget has-margin-4">
+        <h4 class="widget--header has-margin-0">Moderator Tools</h4>
+        <div class="widget--body">
+          <ul>
+            <% if moderator? %>
+              <li><%= link_to 'Moderator Tools', moderator_path %></li>
+            <% end %>
+            <% if admin? %>
+              <li><%= link_to 'Admin Tools', admin_path %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

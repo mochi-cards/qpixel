@@ -52,12 +52,7 @@
   <% end %>
   -->
 
-  <%= form_tag upload_path, multipart: true, class: 'form-inline upload-form js-upload-form', style: "margin: 0; fill:currentColor;" do %>
-    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-    <%= label_tag :file, octicon('paperclip', :height => 16, :"aria-label" => "Attach files"), class: "form-element button" %>
-    <!--<div class="form-caption js-max-size">Max file size <%= SiteSetting['MaxUploadSize'] %>.</div>-->
-    <%= file_field_tag :file, class: "form-element", style: "display: none;" %>
-  <% end %>
+  <%= label_tag :file, octicon('paperclip', :height => 16, :"aria-label" => "Attach files"), form: 'upload-form', class: "form-element button" %>
 
   <% if SiteSetting['MathJaxEnabled'] %>
     <%= md_button action: 'mathjax', label: 'MathJax', class: 'is-icon-only' do %>

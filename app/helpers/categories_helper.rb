@@ -1,7 +1,8 @@
 module CategoriesHelper
   def active?(category)
     current_category
-    current_page?(category_url(category)) || (category.is_homepage && current_page?(root_url)) ||
+    current_page?(category_url(category)) ||
+      # (category.is_homepage && current_page?(root_url)) ||
       (defined?(@current_category) && @current_category&.id == category.id)
   end
 

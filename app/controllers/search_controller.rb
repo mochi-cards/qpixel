@@ -12,5 +12,7 @@ class SearchController < ApplicationController
       @posts = nil
       flash[:danger] = 'Your search syntax is incorrect.'
     end
+
+    render "mochi/search/search", layout: "mochi/layouts/application"
   end
 end

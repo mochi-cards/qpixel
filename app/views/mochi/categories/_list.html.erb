@@ -3,7 +3,7 @@
 
     <!-- Category list -->
     <li>
-      <%= link_to posts_path, class: "category-link" do %>
+      <%= link_to root_path, class: "category-link #{current_page?(root_url) ? 'active' : ''}" do %>
         <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
 
         All posts

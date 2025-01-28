@@ -318,6 +318,31 @@
   }
 }
 
+h3.body-label {
+  color: var(--color-fg-muted);
+}
+label.body-label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--color-fg-muted);
+}
+
 h1.new-post {
   font-size: 1.6em;
+  margin: 0;
+  margin-bottom: 16px;
+}
+
+.post-list--title a {
+  &:hover {
+    color: unset;
+    text-decoration: underline;
+  }
+}
+
+.no-results {
+  color: var(--color-fg-muted);
+  padding: 16px;
 }
