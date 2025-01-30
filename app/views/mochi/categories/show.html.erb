@@ -57,15 +57,15 @@
 
       <!-- Search -->
       <%= form_tag search_path, method: :get, role: 'search', class: 'category-search' do %>
+        <%= hidden_field_tag :category_id, current_category.id %>
         <%= octicon 'search', :height => 16, :"aria-label" => "Search this category" %>
-        <%= search_field_tag :search, params[:search], class: 'form-element', placeholder: "Search all posts" %>
+        <%= search_field_tag :search, params[:search], class: 'form-element', placeholder: "Search posts in #{current_category.name}" %>
       <% end %>
 
       <!-- New post button -->
-      <% current_cat = current_category %>
-      <%= link_to category_post_types_path(current_cat.id),
+      <%= link_to category_post_types_path(current_category.id),
                   class: 'category-header--nav-item mochi-button is-button' do %>
-        <%= current_cat.button_text.present? ? current_cat.button_text : 'New Post' %>
+        <%= current_category.button_text.present? ? current_category.button_text : 'New Post' %>
       <% end %>
     </div>
 
