@@ -20,48 +20,57 @@
 
     <% if @post.post_type.has_answers %>
 
+      <!-- Sorting -->
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
           <h3 style="font-size: 16px; margin: 0;"><%= pluralize(@post.children.where(deleted: false).count, @post.post_type.answer_type.name) %></h2>
         </div>
         <div class="pills-container">
-          <% if @post.post_type.has_votes %>
-            <div class="pill-button">
-              <a href="<%= query_url(sort: 'score') %>" class="<%= params[:sort].nil? || params[:sort] == 'score' ? 'active' : '' %>">Score</a>
-            </div>
-          <% end %>
           <div class="pill-button">
-            <%= link_to 'Activity', request.params.merge(sort: 'active'),
-                class: "button is-muted is-outlined #{params[:sort] == 'active' ? 'is-active' : ''}",
+            <%= link_to 'Oldest', request.params.merge(sort: 'age', direction: 'asc'),
+                class: "button is-muted is-outlined #{params[:sort].nil? || params[:sort] == 'age' ? 'active' : ''}",
+                title: 'Oldest posts first (ignores other activity)' %>
+          </div>
+          <div class="pill-button">
+            <%= link_to 'Activity', request.params.merge(sort: 'active', direction: 'desc'),
+                class: "button is-muted is-outlined #{params[:sort] == 'active' ? 'active' : ''}",
                 title: 'most recent changes first: new answers, edits, delete/undelete' %>
           </div>
-          <div class="pill-button">
-            <%= link_to 'Newest', request.params.merge(sort: 'age'),
-                class: "button is-muted is-outlined #{params[:sort] == 'age' ? 'is-active' : ''}",
-                title: 'newest posts first (ignores other activity)' %>
-          </div>
+          <% if @post.post_type.has_votes %>
+            <div class="pill-button">
+              <a href="<%= query_url(sort: 'score', direction: 'desc') %>" class="<%= params[:sort] == 'score' ? 'active' : '' %>">Score</a>
+            </div>
+          <% end %>
         </div>
       </div>
 
       <div class="post-separator"></div>
 
+      <!-- Child posts -->
       <% @children.each do |answer| %>
-
         <%= render 'mochi/posts/body', post: answer, main_post: @post, children: @children %>
-
       <% end %>
-    <% end %>
 
-    <% if user_signed_in? && !@post.closed %>
-      <%= render 'mochi/posts/form', post: Post.new(post_type_id: Answer.post_type_id, category: @post.category,
-                                              parent: @post), type_summary: false,
-                               category: @post.category, post_type: PostType['Answer'], inline_parent: false,
-                               submit_path: create_response_path(post_type: PostType['Answer'], parent: @post) %>
-    <% elsif !@post.closed %>
-      <div class="sign-up-to-post">
-        <%= link_to 'Sign up', new_saml_user_session_path, class: 'mochi-button button', style: "margin-right: 6px;" %>
-        to post a reply. Already have an account? <%= link_to 'Log in', new_saml_user_session_path, class: '' %> to comment.
-      </div>
+      <!-- Reply form -->
+      <% if user_signed_in? && !@post.closed %>
+        <%= render 'mochi/posts/form',
+          post: Post.new(
+            post_type_id: Answer.post_type_id,
+            category: @post.category,
+            parent: @post
+          ),
+          type_summary: false,
+          category: @post.category,
+          post_type: PostType['Answer'],
+          inline_parent: false,
+          submit_path: create_response_path(post_type: PostType['Answer'], parent: @post)
+        %>
+      <% elsif !@post.closed %>
+        <div class="sign-up-to-post">
+          <%= link_to 'Sign up', new_saml_user_session_path, class: 'mochi-button button', style: "margin-right: 6px;" %>
+          to post a reply. Already have an account? <%= link_to 'Log in', new_saml_user_session_path, class: '' %> to comment.
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>

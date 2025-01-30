@@ -157,6 +157,7 @@ class PostsController < ApplicationController
                 .user_sort(
                   {
                     term: params[:sort],
+                    direction: params[:direction],
                     default: if @post.post_type.has_votes
                                Arel.sql('deleted ASC, score DESC, RAND()')
                              else
