@@ -49,6 +49,18 @@
   <div class="form-group">
     <div class="checkbox-setting">
       <div class="checkbox-setting--desc">
+        <%= f.label :has_comments, 'Comments?', class: 'form-element' %>
+        <span class="form-caption">Does this post type have comment threads?</span>
+      </div>
+      <div class="checkbox-setting--value">
+        <%= f.check_box :has_comments, class: 'form-checkbox-element' %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox-setting">
+      <div class="checkbox-setting--desc">
         <%= f.label :has_votes, 'Votes?', class: 'form-element' %>
         <span class="form-caption">Can this post type be voted on?</span>
       </div>

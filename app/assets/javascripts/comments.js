@@ -201,6 +201,12 @@ $(() => {
 
   const pingable = {};
   $(document).on('keyup', '.js-comment-field', pingable_popup);
+  $(document).on('focus', '.js-comment-field', function() {
+    const $this = $(this);
+    const post_id = $this.data().post;
+    $this.css('min-height', '100px');
+    $(`#submit_comment_${post_id}`).show();
+  });
 
   async function pingable_popup(ev) {
     if (QPixel.Popup.isSpecialKey(ev.keyCode)) {

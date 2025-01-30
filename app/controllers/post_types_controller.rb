@@ -48,10 +48,12 @@ class PostTypesController < ApplicationController
   end
 
   def post_type_params
-    params.require(:post_type).permit(:name, :description, :has_answers, :has_votes, :has_tags, :has_parent,
-                                      :has_category, :has_license, :is_public_editable, :is_closeable,
-                                      :is_top_level, :is_freely_editable, :icon_name, :answer_type_id,
-                                      :has_reactions, :has_only_specific_reactions)
+    params.require(:post_type).permit(
+      :name, :description, :has_answers, :has_votes, :has_tags, :has_parent,
+      :has_category, :has_license, :is_public_editable, :is_closeable,
+      :is_top_level, :is_freely_editable, :icon_name, :answer_type_id,
+      :has_comments, :has_reactions, :has_only_specific_reactions
+    )
   end
 
   def clear_cache!

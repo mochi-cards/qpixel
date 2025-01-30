@@ -1,7 +1,3 @@
-<%#
-    Start new comment thread dialog.
-%>
-
 <% unless current_user.nil? || params[:inline] == 'true' %>
   <div class="modal--container" id="new-thread-modal-<%= post.id %>">
     <div class="modal--body">
@@ -9,9 +5,16 @@
         <%= form_tag create_comment_thread_path, class: "comment-form" do %>
           <%= hidden_field_tag :post_id, post.id %>
 
-          <%= text_area_tag :body, '', class: 'form-element js-comment-field', required: true,
-                            placeholder: 'Write a comment',
-                            data: { post: post.id, thread: '-1', character_count: ".js-character-count-#{post.id}" } %>
+          <%= text_area_tag :body, '',
+            class: 'form-element js-comment-field',
+            required: true,
+            placeholder: 'Write a comment',
+            data: {
+              post: post.id,
+              thread: '-1',
+              character_count: ".js-character-count-#{post.id}"
+            }
+          %>
 
           <span class="has-float-right has-font-size-caption js-character-count-<%= post.id %>"
             style="display: none;"
@@ -20,7 +23,9 @@
             <span class="js-character-count__count">0 / 1000</span>
           </span>
 
-          <%= submit_tag 'Create thread', class: 'button is-filled', style: "display: none;", id: "create_thread_button_#{post.id}", disabled: true %>
+          <div class="post-form actions">
+            <%= submit_tag 'Comment', class: 'mochi-button', style: "display: none;", id: "submit_comment_#{post.id}", disabled: true %>
+          </div>
         <% end %>
       </div>
     </div>
