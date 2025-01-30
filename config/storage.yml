@@ -13,3 +13,6 @@ digitalocean:
   secret_access_key: <%= Rails.application.credentials.dig(:digitalocean, :secret) %>
   bucket: qpixel-storage
   region: us-east-1
+  public: true
+  upload:
+    cache_control: "public, max-age=31536000"
