@@ -173,6 +173,10 @@ ul.category-list {
   color: var(--color-fg-muted);
   font-size: 14px;
   font-weight: 500;
+  &:hover {
+    text-decoration: none;
+    color: var(--color-fg-blue);
+  }
 }
 
 .category-search {
