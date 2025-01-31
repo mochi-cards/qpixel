@@ -2,13 +2,32 @@
 <% post_type ||= defined?(@post_type) && @post_type.id == post.post_type_id ? @post_type : @post.post_type %>
 <% user = @post.user %>
 
+<% content_for :title, @post.title.truncate(max_title_length(@post.category)) %>
+<% content_for :description do %>
+  <% Rails.cache.fetch "posts/#{@post.id}/description" do %>
+    <%= @post.body_plain[0..74].strip %>...
+    <%= @post.children.any? ? @post.children.first.body_plain[0..74].strip : '' %>
+  <% end %>
+<% end %>
+
+<% content_for :twitter_card_meta do %>
+  <meta name="twitter:card" content="summary" />
+  <% if @post.user&.twitter&.present? %>
+    <meta name="twitter:creator" content="@<%= @post.user.twitter %>" />
+  <% end %>
+  <meta property="og:url" content="<%= post_url(@post) %>" />
+  <meta property="og:title" content="<%= @post.title %>" />
+  <meta property="og:description" content="<%= @post.body_plain[0..150].strip %>..." />
+  <meta property="og:image" content="<%= "https://#{RequestContext.community.host}#{SiteSetting['SiteLogoPath']}" %>" />
+<% end %>
+
 <div style="display: grid; grid-template-columns: 200px 1fr;">
 
   <%= render 'mochi/categories/list' %>
 
   <div style="padding: 0 32px;">
 
-    <h1 style="font-weight: 500; margin: 0 0 16px 0;">
+    <h1 style="font-weight: 500; margin: 0 0 8px 0; font-size: 1.75em;">
       <%= @post.title %>
     </h1>
 
@@ -38,7 +57,7 @@
           </div>
           <% if @post.post_type.has_votes %>
             <div class="pill-button">
-              <a href="<%= query_url(sort: 'score', direction: 'desc') %>" class="<%= params[:sort] == 'score' ? 'active' : '' %>">Score</a>
+              <a href="<%= query_url(sort: 'score', direction: 'desc') %>" class="<%= params[:sort] == 'score' ? 'active' : '' %>">Most Voted</a>
             </div>
           <% end %>
         </div>

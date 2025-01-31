@@ -11,14 +11,18 @@
     <% if user.staff? %>
       <span class="user-label">Staff</span>
     <% end %>
-    <%= time_ago_in_words(post.created_at) %> ago
-
-  </div>
-  <% if user == current_user %>
-    <%= link_to edit_post_path(post), class: '' do %>
-      Edit post
+    <%= link_to generic_share_link(post) do %>
+      <%= time_ago_in_words(post.created_at) %> ago
     <% end %>
-  <% end %>
+    <% if user == current_user %>
+      <div>
+        &nbsp;&middot;&nbsp;
+        <%= link_to edit_post_path(post), class: '' do %>
+          Edit post
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 </div>
 
 <div class="post-body">

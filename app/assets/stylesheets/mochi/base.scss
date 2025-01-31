@@ -300,3 +300,8 @@ input {
     background-color: #0b52a6 !important;
     color: #dfddda !important;
 }
+
+a:hover {
+  color: unset;
+  text-decoration: underline;
+}

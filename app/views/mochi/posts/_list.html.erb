@@ -60,6 +60,23 @@
 
     <% category = defined?(@category) ? @category : post.category %>
 
+    <% answered = post.reactions.any? || post.children.any? { |p| p.reactions.any? } %>
+    <% if post.post_type.has_answers? %>
+      <% if answered %>
+        <% answer = post.children.find { |p| p.reactions.any? } %>
+        <% if answer %>
+          <div class="answer-preview">
+            <div class="answered-by">
+              Answered by <strong><%= user_name answer.user %></strong>
+            </div>
+            <p class="post-list--content">
+              <%= strip_tags(answer.body).truncate(SiteSetting['PostBodyListTruncateLength'] || 200) %>
+            </p>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+
     <div class="post-list--meta">
     <!-- Poster / last activity -->
       <span>
@@ -69,8 +86,12 @@
             <%= category.name %>
           </span>
         <% end %>
-        <strong><%= user_name post.user %></strong>
+        <strong><%= user_name post.user %></strong> started
       <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at, locale: :en_abbrev) %> ago</span>
+        <% if post.last_activity != post.created_at %>
+          &nbsp;/&nbsp; updated
+          <span title="<%= post.last_activity.iso8601 %>"><%= time_ago_in_words(post.last_activity, locale: :en_abbrev) %> ago</span>
+        <% end %>
       </span>
 
       <!-- Tags -->
@@ -87,8 +108,8 @@
                            title: tag.excerpt.present? ? tag.excerpt : "(no description yet)" %>
         <% end %>
       <% end %>
-
     </div>
+
 
 
     <div class="has-padding-top-2">
