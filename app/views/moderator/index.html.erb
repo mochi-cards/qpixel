@@ -30,14 +30,16 @@
     </div>
   </div>
 
-  <div class="grid--cell is-4-lg is-6-md is-12-sm">
-    <div class="widget">
-      <div class="widget--body">
-        <i class="fas fa-file-alt"></i>
-        <%= link_to 'Create Help Page', new_post_path(post_type: HelpDoc.post_type_id) %>
+  <% if false %>
+    <div class="grid--cell is-4-lg is-6-md is-12-sm">
+      <div class="widget">
+        <div class="widget--body">
+          <i class="fas fa-file-alt"></i>
+          <%= link_to 'Create Help Page', new_post_path(post_type: HelpDoc.post_type_id) %>
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
 
   <div class="grid--cell is-4-lg is-6-md is-12-sm">
     <div class="widget">
