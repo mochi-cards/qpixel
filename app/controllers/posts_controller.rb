@@ -362,7 +362,7 @@ class PostsController < ApplicationController
       return
     end
 
-    reason = CloseReason.find_by id: params[:reason_id]
+    reason = (CloseReason.find_by id: params[:reason_id]) || CloseReason.where(requires_other_post: false).last
     if reason.nil?
       render json: { status: 'failed', message: 'Close reason not found.' }, status: :not_found
       return

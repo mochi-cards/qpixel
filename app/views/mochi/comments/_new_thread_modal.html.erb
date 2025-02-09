@@ -1,4 +1,4 @@
-<% unless current_user.nil? || params[:inline] == 'true' %>
+<% unless current_user.nil? || post.closed? || params[:inline] == 'true' %>
   <div class="modal--container" id="new-thread-modal-<%= post.id %>">
     <div class="modal--body">
       <div class="thread-footer">

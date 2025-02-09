@@ -308,3 +308,41 @@ a:hover {
   color: unset;
   text-decoration: underline;
 }
+
+.notice {
+  top: unset !important;
+  width: unset !important;
+  background: var(--color-fg);
+  color: var(--bg-color);
+  border-radius: 6px;
+  bottom: 50px;
+  padding: 0.75em 1em;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 10px;
+  cursor: default;
+  font-weight: 500;
+  animation-duration: 200ms;
+  animation-name: fade-up;
+  p {
+    margin: 0;
+  }
+  button {
+    border: unset;
+    font-weight: 700;
+    font-weight: 16px;
+    cursor: pointer;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    translate: 0 10px;
+    opacity: 0;
+  }
+
+  to {
+    translate: 0 0;
+    opacity: 1
+  }
+}

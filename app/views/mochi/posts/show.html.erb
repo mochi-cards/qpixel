@@ -35,7 +35,7 @@
     <%= render 'mochi/posts/user_byline', user: user, post: @post %>
     <% end %>
 
-    <%= render 'mochi/posts/body', post: @post, main_post: @post %>
+    <%= render 'mochi/posts/body', post: @post, main_post: @post, post_type: post_type %>
 
     <% if @post.post_type.has_answers %>
 
@@ -88,6 +88,11 @@
         <div class="sign-up-to-post">
           <%= link_to 'Sign up', new_saml_user_session_path, class: 'mochi-button button', style: "margin-right: 6px;" %>
           to post a reply. Already have an account? <%= link_to 'Log in', new_saml_user_session_path, class: '' %> to comment.
+        </div>
+      <% elsif @post.closed %>
+        <div class="sign-up-to-post">
+          <%= octicon 'lock', :height => 20,  :class => "upvote-icon", :"aria-label" => "Unmark as answer" %>
+          This post has been closed.
         </div>
       <% end %>
     <% end %>

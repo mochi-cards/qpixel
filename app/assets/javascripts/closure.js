@@ -2,7 +2,7 @@ $(() => {
   $('.js-close-question').on('click', (ev) => {
     ev.preventDefault();
 
-    const self = $(ev.target);
+    const self = $(ev.target).closest('.js-close-question');
     const activeRadio = self.parents('.js-close-box').find("input[type='radio'][name='close-reason']:checked");
     const otherPostInput = activeRadio.parents('.widget--body').find('.js-close-other-post');
     const otherPostRequired = activeRadio.attr('data-rop') === 'true';
@@ -18,10 +18,10 @@ $(() => {
       }
     }
 
-    if (!activeRadio.val()) {
-      QPixel.createNotification('danger', 'You must select a close reason.');
-      return;
-    }
+    //if (!activeRadio.val()) {
+    //  QPixel.createNotification('danger', 'You must select a close reason.');
+    //  return;
+    //}
     if (!otherPostInput.val() && otherPostRequired) {
       QPixel.createNotification('danger', 'You must enter an ID or URL to another post.');
       return;

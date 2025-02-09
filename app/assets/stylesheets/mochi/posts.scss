@@ -11,7 +11,7 @@
   height: 26px;
 }
 
-.pill-vote-button, .answer-button {
+.pill-vote-button, .answer-button, .close-button {
   border: 1px solid var(--border-color);
   padding: 3px 5px 3px 4px;
   border-radius: 100px;
@@ -28,6 +28,8 @@
   // transition: background-color 150ms;
   &:hover {
     background-color: var(--top-bar-background-hover);
+    text-decoration: none;
+    fill: var(--color-fg-subtle);
   }
   &.answered:hover {
     background-color: rgba(87, 171, 90, 0.18);
@@ -210,6 +212,22 @@
   margin-top: 1em;
   border-radius: 8px;
   border: 1px solid var(--notification-box-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  fill: var(--color-fg-subtle);
+}
+
+.comments-closed-box {
+  background-color: var(--notification-box-bg);
+  padding: 1em 1em;
+  margin-top: 1em;
+  border-radius: 8px;
+  border: 1px solid var(--notification-box-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  fill: var(--color-fg-subtle);
 }
 
 .category-tag {

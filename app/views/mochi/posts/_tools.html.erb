@@ -1,0 +1,19 @@
+<% unless post.locked? || !post.post_type.is_closeable %>
+  <% if check_your_privilege('flag_close') || (post.user_id === current_user&.id)%>
+    <% if !post.closed %>
+      <a href="#" class="close-post close-button js-close-question" role="button" aria-label="Close this post" data-post-id="<%= post.id %>">
+        <%= octicon 'lock', :height => 14,  :class => "upvote-icon", :"aria-label" => "Unmark as answer" %>
+        <span class="button-label">
+          Close post
+        </span>
+      </a>
+    <% elsif post.closed %>
+      <%= link_to reopen_post_path(post), method: :post, class: 'close-post close-button', role: 'button', 'aria-label': 'Reopen this post' do %>
+        <%= octicon 'unlock', :height => 14,  :class => "upvote-icon", :"aria-label" => "Unmark as answer" %>
+        <span class="button-label">
+          Reopen post
+        </span>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
