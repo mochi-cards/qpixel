@@ -1,7 +1,7 @@
 # rubocop:disable Metrics/ClassLength
 # rubocop:disable Metrics/MethodLength
 class PostsController < ApplicationController
-  before_action :authenticate_user!, except: [:document, :help_center, :show]
+  before_action :authenticate_user!, except: [:document, :help_center, :show, :index]
   before_action :set_post, only: [:toggle_comments, :feature, :lock, :unlock]
   before_action :set_scoped_post, only: [:change_category, :show, :edit, :update, :close, :reopen, :delete, :restore]
   before_action :verify_moderator, only: [:toggle_comments]
