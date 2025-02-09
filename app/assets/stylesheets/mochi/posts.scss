@@ -178,7 +178,7 @@
   border-radius: 0 0 6px 6px;
 }
 
-.thread-footer textarea, .post-field {
+.thread-footer textarea, .post-field, .post_title {
   border: 1px solid var(--border-color);
   background: var(--bg-color);
   color: var(--color-fg);
@@ -332,16 +332,16 @@
       color: var(--color-fg);
     }
   }
-  input.post_title {
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    fill: var(--color-fg-subtle);
-    flex-grow: 1;
-    padding: 7px 16px 7px 6px;
-    background: none;
-    color: var(--color-fg);
-    border-radius: 6px;
-  }
+  // input.post_title {
+  //   border: 1px solid var(--border-color);
+  //   border-radius: 6px;
+  //   fill: var(--color-fg-subtle);
+  //   flex-grow: 1;
+  //   padding: 7px 16px 7px 6px;
+  //   background: none;
+  //   color: var(--color-fg);
+  //   border-radius: 6px;
+  // }
 }
 
 h3.body-label {

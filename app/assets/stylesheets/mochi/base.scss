@@ -310,7 +310,11 @@ a:hover {
 }
 
 .notice {
+  position: fixed;
   top: unset !important;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
   width: unset !important;
   background: var(--color-fg);
   color: var(--bg-color);
@@ -345,4 +349,11 @@ a:hover {
     translate: 0 0;
     opacity: 1
   }
+}
+
+.badge {
+  width: 5px;
+  height: 5px;
+  border-radius: 10px;
+  background-color: var(--color-fg-blue);
 }

@@ -4,9 +4,10 @@
     <!-- Category list -->
     <li>
       <%= link_to root_path, class: "category-link #{current_page?(root_url) ? 'active' : ''}" do %>
-        <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
-
-        All posts
+        <div>
+          <%= octicon 'comment-discussion', :height => 16,  :class => "category-icon", :"aria-label" => "All posts" %>
+          All posts
+        </div>
       <% end %>
     </li>
 
@@ -14,11 +15,13 @@
       <% next unless (current_user&.trust_level || 0) >= (cat.min_view_trust_level || -1) %>
       <li>
         <%= link_to category_path(cat), class: "category-link #{active?(cat) ? 'active' : ''}" do %>
-          <% icon_name = "hash" %>
-          <% if icon_name %>
-            <%= octicon icon_name, :height => 16,  :class => "category-icon", :"aria-label" => cat.name %>
-          <% end %>
-          <%= cat.name %>
+          <div>
+            <% icon_name = "hash" %>
+            <% if icon_name %>
+              <%= octicon icon_name, :height => 16,  :class => "category-icon", :"aria-label" => cat.name %>
+            <% end %>
+            <%= cat.name %>
+          </div>
           <% if user_signed_in? && cat.new_posts_for?(current_user) %>
             <span class="badge is-status" title="unread activity in category"></span>
           <% end %>

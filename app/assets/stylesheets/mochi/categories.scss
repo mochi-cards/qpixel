@@ -24,6 +24,12 @@ ul.category-list {
     fill: var(--color-fg);
     padding: 4px 6px;
     border-radius: 6px;
+    gap: 10px;
+
+    div {
+      display: flex;
+      align-items: center;
+    }
 
     &.active {
       background-color: var(--top-bar-background-hover);
@@ -174,8 +180,9 @@ ul.category-list {
   font-size: 14px;
   font-weight: 500;
   &:hover {
-    text-decoration: none;
-    color: var(--color-fg-blue);
+    // text-decoration: none;
+    color: var(--color-fg);
+    fill: var(--color-fg);
   }
 }
 
