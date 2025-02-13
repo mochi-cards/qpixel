@@ -11,7 +11,7 @@
   height: 26px;
 }
 
-.pill-vote-button, .answer-button, .close-button {
+.pill-vote-button, .answer-button, .close-button, .delete-button {
   border: 1px solid var(--border-color);
   padding: 3px 5px 3px 4px;
   border-radius: 100px;
@@ -30,6 +30,10 @@
     background-color: var(--top-bar-background-hover);
     text-decoration: none;
     fill: var(--color-fg-subtle);
+  }
+  &.danger:hover {
+    background-color: rgba(225, 98, 89, 0.1);
+    border: 1px solid rgba(225, 98, 89, 0.2);
   }
   &.answered:hover {
     background-color: rgba(87, 171, 90, 0.18);
@@ -56,6 +60,11 @@
       font-weight: 600;
     }
   }
+}
+
+.deleted-label {
+  font-weight: 600;
+  color: var(--color-red);
 }
 
 .post-container {

@@ -22,6 +22,9 @@
         <% end %>
       </div>
     <% end %>
+    <% if post.deleted? %>
+      <span class="deleted-label">Deleted</span>
+    <% end %>
   </div>
 </div>
 

@@ -31,10 +31,6 @@
       <%= @post.title %>
     </h1>
 
-    <% if false %>
-    <%= render 'mochi/posts/user_byline', user: user, post: @post %>
-    <% end %>
-
     <%= render 'mochi/posts/body', post: @post, main_post: @post, post_type: post_type %>
 
     <% if @post.post_type.has_answers %>
