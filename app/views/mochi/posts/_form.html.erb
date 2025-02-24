@@ -93,87 +93,109 @@
       <h3 class="body-label">Add a body</h3>
     <% end %>
 
-    <div class="post-container">
-      <%= render 'mochi/shared/markdown_tools' %>
+    <div style="display: none;">
+      <input type="checkbox" id="toggle-markdown-preview">
+      <label for="toggle-markdown-preview">Show preview</label>
+    </div>
 
-      <% if post.id.nil? %>
-        <%= f.hidden_field :post_type_id, value: post.post_type_id || post_type.id %>
-      <% end %>
+    <div style="display: none;">
+      <div class="pills-container">
+        <div class="pill-button">
+          <a id="js-show-write">Write</a>
+        </div>
+        <div class="pill-button">
+          <a id="js-show-preview">Preview</a>
+        </div>
+      </div>
+      <div>
+      </div>
+    </div>
 
-      <% if post_type.has_category? && post.id.nil? %>
-        <%= f.hidden_field :category_id, value: post.category_id || category&.id || parent&.category_id %>
-      <% end %>
+    <div class="write-preview-container">
 
-      <% if post_type.has_parent? && post.id.nil? %>
-        <%= f.hidden_field :parent_id, value: post.parent_id || parent&.id %>
-      <% end %>
+      <div class="flex-50">
+        <div class="post-container js-post-write">
+          <%= render 'mochi/shared/markdown_tools' %>
 
-      <% if type_summary %>
-        <p>
-          <span class="has-font-size-larger">
-              <%= t('posts.unsaved_changes_confirmation') %>
-            You're writing a new <strong><%= post_type.name %></strong>
-            <% if post_type.has_category? && category.present? %>
-              in <strong><%= category.name %></strong>
+          <% if post.id.nil? %>
+            <%= f.hidden_field :post_type_id, value: post.post_type_id || post_type.id %>
+          <% end %>
+
+          <% if post_type.has_category? && post.id.nil? %>
+            <%= f.hidden_field :category_id, value: post.category_id || category&.id || parent&.category_id %>
+          <% end %>
+
+          <% if post_type.has_parent? && post.id.nil? %>
+            <%= f.hidden_field :parent_id, value: post.parent_id || parent&.id %>
+          <% end %>
+
+          <% if type_summary %>
+            <p>
+              <span class="has-font-size-larger">
+                  <%= t('posts.unsaved_changes_confirmation') %>
+                You're writing a new <strong><%= post_type.name %></strong>
+                <% if post_type.has_category? && category.present? %>
+                  in <strong><%= category.name %></strong>
+                <% end %>
+              </span><br/>
+              <span class="has-font-size-smaller has-color-tertiary-700">
+                <%= post_type.description %>
+              </span>
+            </p>
+          <% end %>
+
+          <%= render 'mochi/shared/body_field', f: f, field_name: :body_markdown, field_label: t('posts.body_label'), post: post %>
+
+          <% if [HelpDoc.post_type_id, PolicyDoc.post_type_id].include? post_type.id %>
+            <div class="form-group">
+              <%= f.label :help_category, t('posts.category_label'), class: 'form-element' %>
+              <span class="form-caption">
+                <%= t('posts.category_caption') %>
+              </span>
+              <%= f.text_field :help_category, class: 'form-element' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :help_ordering, t('posts.order_label'), class: 'form-element' %>
+              <span class="form-caption">
+                <%= t('posts.order_caption') %>
+              </span>
+              <%= f.number_field :help_ordering, class: 'form-element' %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :doc_slug, t('posts.slug_label'), class: 'form-element' %>
+              <span class="form-caption"><%= t('posts.slug_caption') %></span>
+              <%= f.text_field :doc_slug, class: 'form-element' %>
+            </div>
+
+            <% if edit_comment %>
+            <% if admin? %>
+              <div class="form-group">
+                  <div class="checkbox-setting">
+                    <div class="checkbox-setting--desc">
+                      <%= label_tag :network_push, 'Push to network', class: 'form-element' %>
+                      <span class="form-caption">Copy this edit to all communities (where the post has not been edited)?</span>
+                    </div>
+                    <div class="checkbox-setting--value">
+                      <%= check_box_tag :network_push, true, false, class: 'form-checkbox-element' %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
             <% end %>
-          </span><br/>
-          <span class="has-font-size-smaller has-color-tertiary-700">
-            <%= post_type.description %>
-          </span>
-        </p>
-      <% end %>
+          <% end %>
 
-      <%= render 'mochi/shared/body_field', f: f, field_name: :body_markdown, field_label: t('posts.body_label'), post: post %>
-
-      <div class="post-preview" style="display: none;"></div>
-
-      <% if [HelpDoc.post_type_id, PolicyDoc.post_type_id].include? post_type.id %>
-        <div class="form-group">
-          <%= f.label :help_category, t('posts.category_label'), class: 'form-element' %>
-          <span class="form-caption">
-            <%= t('posts.category_caption') %>
-          </span>
-          <%= f.text_field :help_category, class: 'form-element' %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :help_ordering, t('posts.order_label'), class: 'form-element' %>
-          <span class="form-caption">
-            <%= t('posts.order_caption') %>
-          </span>
-          <%= f.number_field :help_ordering, class: 'form-element' %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :doc_slug, t('posts.slug_label'), class: 'form-element' %>
-          <span class="form-caption"><%= t('posts.slug_caption') %></span>
-          <%= f.text_field :doc_slug, class: 'form-element' %>
-        </div>
-
-        <% if edit_comment %>
-        <% if admin? %>
-          <div class="form-group">
-              <div class="checkbox-setting">
-                <div class="checkbox-setting--desc">
-                  <%= label_tag :network_push, 'Push to network', class: 'form-element' %>
-                  <span class="form-caption">Copy this edit to all communities (where the post has not been edited)?</span>
-                </div>
-                <div class="checkbox-setting--value">
-                  <%= check_box_tag :network_push, true, false, class: 'form-checkbox-element' %>
-                </div>
-              </div>
+          <% if edit_comment %>
+            <hr/>
+            <div class="form-group">
+              <%= label_tag :edit_comment, t('posts.edit_comment_label'), class: 'form-element' %>
+              <%= text_field_tag :edit_comment, nil, class: 'form-element' %>
             </div>
           <% end %>
-        <% end %>
-      <% end %>
-
-      <% if edit_comment %>
-        <hr/>
-        <div class="form-group">
-          <%= label_tag :edit_comment, t('posts.edit_comment_label'), class: 'form-element' %>
-          <%= text_field_tag :edit_comment, nil, class: 'form-element' %>
         </div>
-      <% end %>
+      </div>
+      <div class="post-preview post-body js-post-preview flex-50" style=""></div>
     </div>
 
     <!-- Submit -->
@@ -182,9 +204,9 @@
                   class: 'button is-muted is-outlined is-danger js-cancel-edit open-button lg',
                   data: { question_body: t('posts.unsaved_changes_confirmation') } %>
       <% if post_type.has_parent? %>
-        <input type="submit" form="new_post" value="Reply" class="button mochi-button lg">
+        <input type="submit" value="Reply" class="button mochi-button lg">
       <% else %>
-        <input type="submit" form="new_post" value="Post" class="button mochi-button lg">
+        <input type="submit" value="Post" class="button mochi-button lg">
       <% end %>
 
     </div>

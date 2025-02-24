@@ -290,7 +290,7 @@ input {
   }
   &:hover {
     background-color: var(--top-bar-background-hover);
-    color: inherit;
+    color: unset;
     text-decoration: none;
   }
 }

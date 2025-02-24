@@ -263,7 +263,7 @@ $(() => {
             removedElements.map(name => $(`<li><code>&lt;${name}&gt;</code></li>`)),
             removedAttributes.map(([attr, elName]) => $(`<li><code>${attr}</code> (in <code>&lt;${elName}&gt;</code>)</li>`)));
 
-        $tgt.parents('.form-group').siblings('.post-preview').html(html);
+        $('.post-preview').html(html);
         $tgt.parents('form').find('.js-post-html[name="__html"]').val(html + '<!-- g: js, mdit -->');
       }, 0);
 
@@ -463,5 +463,19 @@ $(() => {
     });
 
     location.href = $btn.attr('href');
+  });
+
+
+  $('a#js-show-write').on('click', async (ev) => {
+    $('.js-post-preview').hide();
+    $('.js-post-write').show();
+    $(this).addClass('active');
+    $('a#js-show-preview').removeClass('active');
+  });
+  $('a#js-show-preview').on('click', async (ev) => {
+    $('.js-post-preview').show();
+    $('.js-post-write').hide();
+    $(this).addClass('active');
+    $('a#js-show-write').removeClass('active');
   });
 });
