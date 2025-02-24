@@ -23,6 +23,7 @@ $(() => {
 
     const actions = {
       bold: ['**', '**'],
+      link: ['[', '](url)'],
       italic: ['_', '_'],
       code: ['`', '`'],
       quote: ['\n > ', null],
@@ -38,8 +39,14 @@ $(() => {
       const preSelection = [$field[0].selectionStart, $field[0].selectionEnd];
       insertIntoField($field, actions[action][0], actions[action][1]);
       $field.focus();
-      $field[0].selectionStart = preSelection[0] + actions[action][0].length;
-      $field[0].selectionEnd = preSelection[1] + actions[action][0].length;
+      if (action === 'link') {
+        let length = preSelection[1] - preSelection[0];
+        $field[0].selectionStart = preSelection[0] + actions[action][0].length + length + 2;
+        $field[0].selectionEnd = preSelection[0] + actions[action][0].length + length + 5;
+      } else {
+        $field[0].selectionStart = preSelection[0] + actions[action][0].length;
+        $field[0].selectionEnd = preSelection[1] + actions[action][0].length;
+      }
     }
   });
 

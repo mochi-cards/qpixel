@@ -37,7 +37,7 @@
   <%= md_button action: 'code', label: 'Monospace font', class: 'is-icon-only' do %>
     <%= octicon 'code', :height => 16,  :class => "category-icon", :"aria-label" => "Code" %>
   <% end %>
-  <%= md_button label: 'Link', class: 'is-icon-only', data_modal: '#markdown-link-insert' do %>
+  <%= md_button action: 'link', label: 'Link', class: 'is-icon-only' do %>
     <%= octicon 'link', :height => 16,  :class => "category-icon", :"aria-label" => "Link" %>
   <% end %>
   <%= md_button action: 'numbered', label: 'Numbered list' do %>
@@ -52,7 +52,7 @@
   <% end %>
   -->
 
-  <%= label_tag :file, octicon('paperclip', :height => 16, :"aria-label" => "Attach files"), form: 'upload-form', class: "form-element button" %>
+  <%= label_tag :file, octicon('paperclip', :height => 16, :"aria-label" => "Attach files"), form: 'upload-form', class: "form-element open-button" %>
 
   <% if SiteSetting['MathJaxEnabled'] %>
     <%= md_button action: 'mathjax', label: 'MathJax', class: 'is-icon-only' do %>

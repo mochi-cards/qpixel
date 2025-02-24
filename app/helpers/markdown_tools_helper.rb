@@ -1,7 +1,7 @@
 module MarkdownToolsHelper
   def md_button(name = nil, action: nil, label: nil, **attribs, &block)
     attribs.merge! href: 'javascript:void(0)',
-                   class: "#{attribs[:class] || ''} button is-muted is-outlined js-markdown-tool",
+                   class: "#{attribs[:class] || ''} open-button js-markdown-tool",
                    data_action: action,
                    aria_label: label,
                    title: label,
