@@ -1,7 +1,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<% desc = "#{SiteSetting['SiteName']} on Codidact - open, community-run Q&A knowledge sharing" %>
+<% desc = "Discussions about Mochi, flashcards, learning, note taking, and memory." %>
 <meta name="description" content="<%= content_for?(:description) ? content_for(:description) : desc %>" />
 
 <% page_title = (Rails.env.development? ? '[DEV] ' : '') +
@@ -12,7 +12,7 @@
 </title>
 
 <% icon_path = SiteSetting['IconPath'] %>
-<link rel="icon" href="<%= icon_path.present? ? icon_path : '/assets/favicon.ico' %>" />
+<link rel="icon" href="<%= icon_path.present? ? icon_path : '/assets/icon.png' %>" />
 <link rel="search" type="application/opensearchdescription+xml"
       title="Codidact <%= RequestContext.community.name %> search" href="<%= osd_url(format: :xml) %>" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
