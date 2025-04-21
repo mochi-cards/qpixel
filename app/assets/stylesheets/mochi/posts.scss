@@ -24,7 +24,7 @@
   cursor: pointer;
   gap: 4px;
   line-height: normal;
-  transition: all 500ms;
+  transition: all 300ms;
   // transition: background-color 150ms;
   &:hover {
     background-color: var(--top-bar-background-hover);
@@ -34,6 +34,7 @@
   &.danger:hover {
     background-color: rgba(225, 98, 89, 0.1);
     border: 1px solid rgba(225, 98, 89, 0.2);
+    fill: rgba(225, 98, 89, 0.4);
   }
   &.answered:hover {
     background-color: rgba(87, 171, 90, 0.18);
@@ -238,6 +239,14 @@
   }
 }
 
+.thread-footer textarea, .post_title {
+  background: var(--text-area-bg);
+}
+
+.post-field {
+  background: var(--bg-color);
+}
+
 .post-field {
   min-height: 100px;
 }
@@ -252,6 +261,12 @@
   align-items: center;
   gap: 12px;
   fill: var(--color-fg-subtle);
+  a {
+    text-decoration: underline;
+  }
+  a.mochi-button {
+    text-decoration: none;
+  }
 }
 
 .comments-closed-box {

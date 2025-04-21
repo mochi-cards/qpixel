@@ -40,20 +40,21 @@
         <div>
           <h3 style="font-size: 16px; margin: 0;"><%= pluralize(@post.children.where(deleted: false).count, @post.post_type.answer_type.name) %></h2>
         </div>
+        <% sort_param = params[:sort] || @post.post_type.has_votes ? 'score' : 'age' %>
         <div class="pills-container">
           <div class="pill-button">
             <%= link_to 'Oldest', request.params.merge(sort: 'age', direction: 'asc'),
-                class: "button is-muted is-outlined #{params[:sort].nil? || params[:sort] == 'age' ? 'active' : ''}",
+                class: "button is-muted is-outlined #{sort_param == 'age' ? 'active' : ''}",
                 title: 'Oldest posts first (ignores other activity)' %>
           </div>
           <div class="pill-button">
             <%= link_to 'Activity', request.params.merge(sort: 'active', direction: 'desc'),
-                class: "button is-muted is-outlined #{params[:sort] == 'active' ? 'active' : ''}",
+                class: "button is-muted is-outlined #{sort_param == 'active' ? 'active' : ''}",
                 title: 'most recent changes first: new answers, edits, delete/undelete' %>
           </div>
           <% if @post.post_type.has_votes %>
             <div class="pill-button">
-              <a href="<%= query_url(sort: 'score', direction: 'desc') %>" class="<%= params[:sort] == 'score' ? 'active' : '' %>">Most Voted</a>
+              <a href="<%= query_url(sort: 'score', direction: 'desc') %>" class="<%= sort_param == 'score' ? 'active' : '' %>">Most Voted</a>
             </div>
           <% end %>
         </div>
@@ -82,8 +83,10 @@
         %>
       <% elsif !@post.closed %>
         <div class="sign-up-to-post">
+          <span>
           <%= link_to 'Sign up', new_saml_user_session_path, class: 'mochi-button button', style: "margin-right: 6px;" %>
           to post a reply. Already have an account? <%= link_to 'Log in', new_saml_user_session_path, class: '' %> to comment.
+          </span>
         </div>
       <% elsif @post.closed %>
         <div class="sign-up-to-post">
