@@ -1,7 +1,7 @@
 # rubocop:disable Metrics/ClassLength
 # rubocop:disable Metrics/MethodLength
 class PostsController < ApplicationController
-  before_action :authenticate_user!, except: [:document, :help_center, :show, :index]
+  before_action :authenticate_user!, except: [:document, :help_center, :show, :index, :rss_feed]
   before_action :set_post, only: [:toggle_comments, :feature, :lock, :unlock]
   before_action :set_scoped_post, only: [:change_category, :show, :edit, :update, :close, :reopen, :delete, :restore]
   before_action :verify_moderator, only: [:toggle_comments]
@@ -174,25 +174,12 @@ class PostsController < ApplicationController
   end
 
   def index
-    @posts = Post.all
-    all_display_post_types = Category.all.map(&:display_post_types).reduce(:+).uniq
-    sort_params = {
-      activity: { last_activity: :desc },
-      age: { created_at: :desc },
-      score: { score: :desc },
-      lottery: [
-        Arel.sql('(RAND() - ? * DATEDIFF(CURRENT_TIMESTAMP, posts.created_at)) DESC'),
-        SiteSetting['LotteryAgeDeprecationSpeed']
-      ],
-      native: Arel.sql('att_source IS NULL DESC, last_activity DESC')
-    }
-    sort_param = sort_params[params[:sort]&.to_sym] || { last_activity: :desc }
-    @posts = Post.all.undeleted.where(post_type_id: all_display_post_types)
-                 .includes(:post_type, :tags).list_includes
-                 .paginate(page: params[:page], per_page: 50)
-                 .order(sort_param)
-
+    build_index
     render "mochi/posts/index", layout: "mochi/layouts/application"
+  end
+
+  def rss_feed
+    build_index
   end
 
   def edit
@@ -729,6 +716,26 @@ class PostsController < ApplicationController
     end
 
     RequestContext.redis.del(*keys)
+  end
+
+  def build_index
+    @posts = Post.all
+    all_display_post_types = Category.all.map(&:display_post_types).reduce(:+).uniq
+    sort_params = {
+      activity: { last_activity: :desc },
+      age: { created_at: :desc },
+      score: { score: :desc },
+      lottery: [
+        Arel.sql('(RAND() - ? * DATEDIFF(CURRENT_TIMESTAMP, posts.created_at)) DESC'),
+        SiteSetting['LotteryAgeDeprecationSpeed']
+      ],
+      native: Arel.sql('att_source IS NULL DESC, last_activity DESC')
+    }
+    sort_param = sort_params[params[:sort]&.to_sym] || { last_activity: :desc }
+    @posts = Post.all.undeleted.where(post_type_id: all_display_post_types)
+                 .includes(:post_type, :tags).list_includes
+                 .paginate(page: params[:page], per_page: 50)
+                 .order(sort_param)
   end
 end
 # rubocop:enable Metrics/MethodLength

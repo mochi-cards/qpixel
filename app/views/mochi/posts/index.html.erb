@@ -75,8 +75,12 @@
     </div>
 
     <!-- Pagination -->
-    <div class="has-padding-top-4">
+    <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between;">
       <%= will_paginate @posts, renderer: BootstrapPagination::Rails %>
+      <%= link_to index_feed_path(format: 'rss'), class: 'category-rss-link' do %>
+        <%= octicon 'rss', :height => 16, :"aria-label" => "Subscribe to RSS feed" %>
+        Subscribe to RSS feed
+      <% end %>
     </div>
 
   </div>

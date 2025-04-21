@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   end
 
   root                                     to: 'posts#index'
+  get    'feed',                           to: 'posts#rss_feed', as: :index_feed
 
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?  
   
