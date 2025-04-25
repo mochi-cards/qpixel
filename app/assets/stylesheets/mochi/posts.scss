@@ -281,6 +281,18 @@
   fill: var(--color-fg-subtle);
 }
 
+.post-show--title {
+  font-weight: 500;
+  margin: 0 0 8px 0;
+  font-size: 2em;
+  display: flex;
+  align-items: center;
+  .post-title-icon {
+    margin-right: 10px;
+  }
+  fill: var(--color-fg-subtle);
+}
+
 .category-tag {
   padding: 1px 8px 2px 6px;
   border-radius: 100px;
