@@ -97,7 +97,8 @@ class CommentsController < ApplicationController
     else
       flash[:danger] = @comment.errors.full_messages.join(', ')
     end
-    redirect_to comment_thread_path(@comment_thread.id)
+    # redirect_to comment_thread_path(@comment_thread.id)
+    redirect_to helpers.generic_show_link(@comment_thread.post)
   end
 
   def update
