@@ -6,7 +6,9 @@
     <% required = required_ids&.include?(tag.id) ? 'is-filled' : '' %>
     <% topic = topic_ids&.include?(tag.id) ? 'is-outlined' : '' %>
     <% moderator = moderator_ids.include?(tag.id) ? 'is-red is-outlined' : '' %>
-    <div class="post-tag">
+    <% bug = tag.name == 'bug' ? 'red-tag' : '' %>
+    <% feature = tag.name == 'feature-request' ? 'blue-tag' : '' %>
+    <div class="post-tag <%= "#{feature} #{bug}" %>">
       <span style="padding-bottom: 2px;">
         <%= tag.name %>
       </span>

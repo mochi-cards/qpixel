@@ -13,7 +13,7 @@
     </h1>
 
     <!-- Errors -->
-    <% if @post.errors.any? %>
+    <% false && if @post.errors.any? %>
       <div class="notice is-danger is-filled">
         <p>The following errors prevented your post from being saved:</p>
         <ul>

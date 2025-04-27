@@ -88,13 +88,6 @@
             <%= category.name %>
           </span>
         <% end %>
-        <strong><%= user_name post.user %></strong> started
-      <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at, locale: :en_abbrev) %> ago</span>
-        <% if post.last_activity != post.created_at %>
-          &nbsp;/&nbsp; updated
-          <span title="<%= post.last_activity.iso8601 %>"><%= time_ago_in_words(post.last_activity, locale: :en_abbrev) %> ago</span>
-        <% end %>
-      </span>
 
       <!-- Tags -->
       <% if post.post_type.has_tags %>
@@ -105,10 +98,26 @@
           <% required = required_ids&.include?(tag.id) ? 'is-filled' : '' %>
           <% topic = topic_ids&.include?(tag.id) ? 'is-outlined' : '' %>
           <% moderator = moderator_ids.include?(tag.id) ? 'is-red is-outlined' : '' %>
+          <% bug = tag.name == 'bug' ? 'red-tag' : '' %>
+          <% feature = tag.name == 'feature-request' ? 'blue-tag' : '' %>
           <%= link_to tag.name, tag_url(id: post.category_id, tag_id: tag.id),
-                           class: "post-tag #{required} #{topic} #{moderator}",
-                           title: tag.excerpt.present? ? tag.excerpt : "(no description yet)" %>
+                class: "post-tag #{required} #{topic} #{moderator} #{feature} #{bug}",
+                title: tag.excerpt.present? ? tag.excerpt : "(no description yet)" %>
         <% end %>
+      <% end %>
+      <strong><%= user_name post.user %></strong> started
+      <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at, locale: :en_abbrev) %> ago</span>
+        <% if post.last_activity != post.created_at %>
+          &nbsp;/&nbsp; updated
+          <span title="<%= post.last_activity.iso8601 %>"><%= time_ago_in_words(post.last_activity, locale: :en_abbrev) %> ago</span>
+        <% end %>
+      </span>
+      <% if answered %>
+        <% answer = post.reactions.first || post.children.find { |p| p.reactions.any? }.reactions.first %>
+        <span class="reaction-label">
+          <%= octicon 'check', :height => 14,  :class => "upvote-icon", :"aria-label" => "Marked as answer" %>
+          <%= answer.reaction_type.name %>
+        </span>
       <% end %>
     </div>
 
@@ -129,7 +138,6 @@
     </div>
   </div>
 
-  <% answered = post.reactions.any? || post.children.any? { |p| p.reactions.any? } %>
   <div class="post-stats">
     <% if post.post_type.has_answers? %>
       <div class="reply-count <% if answered %>answered<% end %>">

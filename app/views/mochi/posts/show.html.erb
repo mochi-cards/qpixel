@@ -29,7 +29,7 @@
 
     <h1 class="post-show--title">
       <% if @post.post_type.is_closeable && @post.closed && !@post.duplicate_post %>
-        <%= octicon 'lock', :height => 24,  :class => "post-title-icon", :"aria-label" => "Unmark as answer" %>
+        <%= octicon 'lock', :height => 24,  :class => "post-title-icon", :"aria-label" => "This post has been closed" %>
       <% end %>
       <%= @post.title %>
     </h1>
@@ -93,7 +93,7 @@
         </div>
       <% elsif @post.closed %>
         <div class="sign-up-to-post">
-          <%= octicon 'lock', :height => 20,  :class => "upvote-icon", :"aria-label" => "Unmark as answer" %>
+          <%= octicon 'lock', :height => 20,  :class => "upvote-icon", :"aria-label" => "This post has been closed" %>
           This post has been closed.
         </div>
       <% end %>

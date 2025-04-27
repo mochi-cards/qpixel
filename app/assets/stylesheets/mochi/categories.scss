@@ -73,7 +73,10 @@ ul.category-list {
       fill: var(--color-fg-subtle);
       line-height: 0.7;
       cursor: pointer;
-      &:hover, &.active {
+      &.active {
+        svg { visibility: hidden; }
+      }
+      &:hover {
         color: var(--color-fg-blue);
         fill: var(--color-fg-blue);
       }
@@ -90,9 +93,9 @@ ul.category-list {
     margin: 0;
     display: flex;
     align-items: center;
+    gap: 7px;
     .post-title-icon {
       fill: var(--color-fg-subtle);
-      margin-right: 7px;
     }
     // a:visited {
     //   color: var(--color-fg-subtle);
@@ -119,24 +122,25 @@ ul.category-list {
 
 .post-tag {
   font-size: var(--font-size-small);
-  padding: 0 8px;
-  display: inline-block;
+  padding: 2px 8px;
   font-weight: var(--font-weight-medium);
   white-space: nowrap;
   border-radius: 2em;
   user-select: none;
+  line-height: 1;
+  margin-right: 3px;
 
   // color: var(--label-color);
   // background-color: var(--label-color-bg);
   // border: 1px solid var(--label-color-border);
 
-  color: var(--color-fg-muted);
+  color: var(--color-fg);
   background-color: var(--top-bar-background-hover);
   border: none;
 
-  font-weight: 400;
+  font-weight: 500;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
 }
 
@@ -252,4 +256,13 @@ ul.category-list {
     color: var(--color-fg-muted);
     cursor: default;
   }
+}
+
+.reaction-label {
+  font-weight: 700;
+  color: var(--color-green);
+  fill: var(--color-green);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }

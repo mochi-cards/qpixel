@@ -77,7 +77,8 @@ body {
     --color-fg: rgba(51, 51, 51, 1);
     --color-fg-muted: rgba(51, 51, 51, 0.6);
     --color-fg-subtle: #9b9b9b; //rgba(51, 51, 51, 0.5); opacity not allowed in :visited.
-    --color-red: rgb(225, 98, 89);
+    // --color-red: rgb(225, 98, 89);
+    --color-red: #e5534b;
     --color-green: rgb(87, 171, 90); //rgb(161, 204, 101);
     --color-green-bg: rgba(87, 171, 90, 0.1); //rgb(161, 204, 101);
     // --bg-color: rgb(247, 247, 247);
@@ -138,7 +139,8 @@ body {
     --color-fg-muted: rgba(255, 255, 255, 0.6);
     --color-fg-subtle: #777; // rgba(255, 255, 255, 0.4); opacity not allowed in :visited.
     /* --color-fg: rgba(255, 255, 255, 0.9); */
-    --color-red: rgb(225, 98, 89);
+    // --color-red: rgb(225, 98, 89);
+    --color-red: #e5534b;
     --color-green: rgb(87, 171, 90); //rgb(161, 204, 101);
     --color-green-bg: rgba(87, 171, 90, 0.1); //rgb(161, 204, 101);
     --bg-color: rgb(36, 36, 38);
@@ -361,4 +363,14 @@ a:hover {
   height: 5px;
   border-radius: 10px;
   background-color: var(--color-fg-blue);
+}
+
+.field-error {
+  color: #e5534b;
+  fill: #e5534b;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
 }
