@@ -3,10 +3,21 @@ class NotificationsController < ApplicationController
   before_action :authenticate_user!, only: [:index]
 
   def index
-    @notifications = Notification.unscoped.where(user: current_user).paginate(page: params[:page], per_page: 100)
-                                 .order(Arel.sql('is_read ASC, created_at DESC'))
+    filter_params = {
+      read: { is_read: true },
+      unread: { is_read: false },
+      all: {}
+    }
+    filter_param = filter_params[params[:filter]&.to_sym] || { is_read: false }
+
+    @notifications = Notification
+      .unscoped.where({user: current_user}.merge(filter_param))
+      .paginate(page: params[:page], per_page: 100)
+      .order(Arel.sql('is_read ASC, created_at DESC'))
+
     respond_to do |format|
-      format.html { render :index, layout: 'without_sidebar' }
+      # format.html { render :index, layout: 'without_sidebar' }
+      format.html { render "mochi/notifications/index", layout: "mochi/layouts/application" }
       format.json { render json: @notifications, methods: :community_name }
     end
   end
@@ -27,7 +38,8 @@ class NotificationsController < ApplicationController
       respond_to do |format|
         format.html do
           flash[:notice] = 'Marked as read.'
-          render :index
+          redirect_back_or_to :index
+          # render :index
         end
         format.json { render json: { status: 'success', notification: @notification }, methods: :community_name }
       end

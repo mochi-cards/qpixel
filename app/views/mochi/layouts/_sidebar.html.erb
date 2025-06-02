@@ -12,7 +12,6 @@
     <% end %>
   <% end %>
 
-
   <!-- Featured -->
   <% unless @community.is_fake || true %>
     <% if Rails.env.development? || @hot_questions.to_a.size > 0 || @pinned_links.to_a.size > 0 %>

@@ -159,6 +159,7 @@ class CommentsController < ApplicationController
 
   def thread
     not_found unless @comment_thread.can_access?(current_user)
+    # redirect_to post_path(@comment_thread.post_id)
   end
 
   def thread_followers

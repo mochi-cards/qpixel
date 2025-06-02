@@ -1,4 +1,5 @@
 <div class="category-sidebar">
+
   <ul class="category-list">
 
     <!-- Category list -->
@@ -38,4 +39,23 @@
       </li>
     <% end %>
   </ul>
+
+  <% if current_user %>
+    <hr class="category-list" style="margin: 15px 15px 15px 0; border-top: 1px solid var(--border-color)">
+
+    <ul class="category-list">
+      <li>
+        <%= link_to notifications_path, class: "category-link #{current_page?(notifications_url) ? 'active' : ''}" do %>
+          <div>
+            <%= octicon 'inbox', :height => 16,  :class => "category-icon", :"aria-label" => "Inbox" %>
+            Inbox
+            <% unread = current_user.unread_count %>
+          </div>
+          <% if unread > 0 %>
+            <div class="inbox-count"><%= unread %></div>
+          <% end %>
+        <% end %>
+      </li>
+    </ul>
+  <% end %>
 </div>

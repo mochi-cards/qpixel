@@ -10,7 +10,7 @@ ul.category-list {
     // padding: 4px 2px;
 
     .category-icon {
-      margin-right: 4px;
+      margin-right: 0.375em;
       fill: var(--color-fg-subtle);
     }
   }
@@ -117,7 +117,9 @@ ul.category-list {
     align-items: center;
     gap: 10px
   }
-
+  .user-name {
+    color: var(--color-fg);
+  }
 }
 
 .post-tag {
@@ -164,9 +166,13 @@ ul.category-list {
   display: flex;
   align-items: center;
   .category-icon {
-    margin-right: 4px;
+    margin-right: 0.375em;
     fill: var(--color-fg-subtle);
   }
+}
+.category-icon {
+  margin-right: 0.375em;
+  fill: var(--color-fg-subtle);
 }
 
 .category-description {

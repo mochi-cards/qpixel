@@ -374,3 +374,78 @@ a:hover {
   gap: 6px;
   margin-top: 6px;
 }
+
+@keyframes fade-out {
+  from {
+    // background: var(--color-bg-blue);
+    background: rgba(71,139,230,0.05);
+  }
+
+  to {
+    background: transparent;
+    // background: rgba(71,139,230,0);
+    // background: rgba(0, 0, 255, 0);
+  }
+}
+
+:target {
+  animation: 3s fade-out;
+  // background: yellow;
+  scroll-margin-top: 50px;
+  margin: -1em;
+  padding: 1em;
+}
+
+.inbox-count {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: normal;
+  padding: 1px 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  background-color: var(--bg-color-light);
+}
+
+.default-button {
+  display: inline-flex;
+  position: relative;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  line-height: 1.2;
+  border-radius: 6px;
+  border: none;
+  user-select: none;
+  transition-property: background, opacity;
+  transition-duration: 100ms;
+  transition-timing-function: ease-out;
+  cursor: pointer;
+  opacity: 1;
+  overflow: hidden; // Needed for ellipsis-text.
+  &:focus { box-shadow: var(--focus-box-shadow) }
+  &.disabled {
+    cursor: default;
+    opacity: 0.4;
+  }
+  font-size: 13px;
+  height: 28px;
+  padding: 0 10px;
+  gap: 6px;
+  &.default {
+    color: var(--color-fg);
+    fill: var(--color-fg);
+    background: var(--button--background);
+    box-shadow: var(--button--box-shadow);
+  }
+
+  &:hover {
+    background: var(--button--background-hover);
+    text-decoration: none;
+  }
+  &:active {
+  }
+  .button-icon {
+    fill: var(--color-fg-subtle);
+  }
+}

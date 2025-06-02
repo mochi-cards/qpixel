@@ -205,7 +205,7 @@ $(() => {
     const $this = $(this);
     const post_id = $this.data().post;
     $this.css('min-height', '100px');
-    $(`#submit_comment_${post_id}`).show();
+    $(`#comment_form_${post_id}`).show();
   });
 
   async function pingable_popup(ev) {

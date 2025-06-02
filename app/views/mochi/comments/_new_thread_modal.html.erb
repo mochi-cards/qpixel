@@ -23,8 +23,8 @@
             <span class="js-character-count__count">0 / 1000</span>
           </span>
 
-          <div class="post-form actions">
-            <%= submit_tag 'Comment', class: 'mochi-button', style: "display: none;", id: "submit_comment_#{post.id}", disabled: true %>
+          <div class="post-form actions" style="display: none;" id="comment_form_<%= post.id %>">
+            <%= submit_tag 'Comment', class: 'mochi-button', id: "submit_comment_#{post.id}", disabled: true %>
           </div>
         <% end %>
       </div>

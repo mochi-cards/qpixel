@@ -111,7 +111,7 @@
                 <span class="js-character-count__count">0 / 1000</span>
               </span>
 
-              <div class="post-form actions">
+              <div class="post-form actions" id="comment_form_<%= post.id %>">
                 <%= submit_tag 'Reply', class: 'mochi-button', id: "submit_comment_#{post.id}", disabled: true, style: "display: none;" %>
               </div>
             <% end %>

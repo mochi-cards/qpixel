@@ -105,11 +105,11 @@
                 title: tag.excerpt.present? ? tag.excerpt : "(no description yet)" %>
         <% end %>
       <% end %>
-      <strong><%= user_name post.user %></strong> started
-      <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at, locale: :en_abbrev) %> ago</span>
+      <strong class="user-name"><%= user_name post.user %></strong> started
+      <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at) %> ago</span>
         <% if post.last_activity != post.created_at %>
           &nbsp;/&nbsp; updated
-          <span title="<%= post.last_activity.iso8601 %>"><%= time_ago_in_words(post.last_activity, locale: :en_abbrev) %> ago</span>
+          <span title="<%= post.last_activity.iso8601 %>"><%= time_ago_in_words(post.last_activity) %> ago</span>
         <% end %>
       </span>
       <% if answered %>

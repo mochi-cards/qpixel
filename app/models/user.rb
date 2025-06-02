@@ -43,7 +43,7 @@ class User < ApplicationRecord
   scope :active, -> { where(deleted: false) }
   scope :deleted, -> { where(deleted: true) }
 
-  after_create :send_welcome_tour_message
+  # after_create :send_welcome_tour_message
 
   def self.list_includes
     includes(:posts, :avatar_attachment)

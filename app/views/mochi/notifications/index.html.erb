@@ -1,0 +1,82 @@
+<div style="display: grid; grid-template-columns: 200px 1fr;">
+  <%= render 'mochi/categories/list' %>
+
+  <div>
+    <!-- Title -->
+    <h2 class="category-title">
+      <%= octicon 'inbox', :height       => 20,
+                           :class        => "category-icon",
+                           :"aria-label" => "Inbox" %>
+      Inbox
+    </h2>
+
+    <div class="category-description">
+      <p>
+        You'll find all of your notifications here, including replies to threads you've started and comments on posts.
+      </p>
+    </div>
+
+    <div class="category-toolbar">
+
+      <!-- Sorting -->
+      <div class="pills-container">
+        <div class="pill-button">
+          <%= link_to 'Unread', query_url(filter: 'unread'),
+                      class: "#{params[:filter].nil? || params[:filter] == 'unread' ? 'active' : ''}",
+                      title: 'unread notifications' %>
+        </div>
+        <div class="pill-button">
+          <%= link_to 'Read', query_url(filter: 'read'),
+                      class: "#{params[:filter] == 'read' ? 'active' : ''}",
+                      title: 'read notifications' %>
+        </div>
+        <div class="pill-button">
+          <%= link_to 'All notifications', query_url(filter: 'all'),
+                      class: "#{params[:filter] == 'all' ? 'active' : ''}",
+                      title: 'all notifications' %>
+        </div>
+      </div>
+    </div>
+
+    <% filter_type = if params[:filter].nil? || params[:filter] == 'unread' then 'unread' elsif params[:filter] == 'read' then 'read' else '' end %>
+
+    <div class="item-list">
+      <% if @notifications.empty? %>
+        No <%= filter_type %> notifications.
+      <% end %>
+      <% @notifications.each do |notif| %>
+        <div class="post-list-item" style="justify-content: space-between; padding: 16px;">
+          <div style="margin-right: 2em">
+            <span>
+              <% if notif.category %>
+                <%= octicon 'hash', :height => 14,  :class => "category-icon", :style => "; position: relative; top: 2px;" %><span style="margin-left: -2px"><%= notif.category.name %> /&nbsp;</span>
+              <% end %>
+              <a href="<%= notif.link %>">
+                <strong><%= notif.title %></strong>
+              </a>
+            </span>
+            <div class="post-list--meta">
+              <%= notif.display_type %>
+              <span title="<%= notif.created_at.iso8601 %>"><%= time_ago_in_words(notif.created_at) %> ago</span>
+            </div>
+            <div style="display: none;" class="form-caption"><%= CGI.unescape_html(notif.created_at.strftime('%b&nbsp;%-d,&nbsp;%Y&nbsp;at&nbsp;%H:%M')).html_safe %></div>
+          </div>
+          <% unless notif.is_read %>
+            <div style="flex-shrink: 0;">
+              <%= link_to read_notifications_url(notif.id), method: :post, class: "default-button default" do %>
+                <%= octicon 'check', :height => 16, :class => "button-icon" %>
+                Mark as read
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <div class="item-list">
+    <!-- Subscribe to RSS -->
+
+    <div style="margin-top: 16px; display: flex; align-items: center; justify-content: space-between;">
+      <%= will_paginate @notifications, renderer: BootstrapPagination::Rails %>
+    </div>
+
+  </div>
+</div>
