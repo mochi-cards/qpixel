@@ -1,3 +1,19 @@
+```
+brew services run redis
+brew services run mysql@8.4
+bin/rails server
+```
+
+# Heroku
+When setting up the database in Heroku you need to populate the DATABASE_URL with the one provided by the addon (e.g. `JAWSDB_URL`), but change it from
+```
+mysql://user:pw@host:3306/database
+```
+to
+```
+mysql2://user:pw@host:3306/database?reconnect=true
+```
+
 <div align="center">
   <br>
   <h1>QPixel</h1>
