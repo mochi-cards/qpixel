@@ -127,6 +127,8 @@ body {
     --notification-box-border: rgba(0, 0, 0, 0.1);
 
     --text-area-bg: rgba(0, 0, 0, 0.025);
+
+    --ping-bg: rgb(233,233,233);
   }
   .dark {
     display: none !important;
@@ -189,6 +191,8 @@ body {
     --notification-box-bg: rgba(0, 0, 0, 0.2);
     --notification-box-border: rgba(255, 255, 255, 0.1);
     --text-area-bg: rgba(0, 0, 0, 0.1);
+
+    --ping-bg: rgb(50,51,53);
   }
   .light {
     display: none !important;
@@ -403,7 +407,8 @@ a:hover {
   padding: 1px 6px;
   border-radius: 8px;
   flex-shrink: 0;
-  background-color: var(--bg-color-light);
+  // background-color: var(--bg-color-light);
+  background-color: var(--ping-bg);
 }
 
 .default-button {

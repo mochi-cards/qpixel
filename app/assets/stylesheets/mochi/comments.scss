@@ -1,0 +1,12 @@
+a.ping, a.ping.me {
+  background-color: var(--ping-bg);
+  color: var(--color-fg);
+  font-weight: 600;
+  border-radius: 0.6em;
+  padding: .2em .34em;
+  // font-size: 1em;
+}
+
+.post-body a.ping {
+  color: var(--color-fg);
+}

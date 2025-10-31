@@ -1,3 +1,57 @@
+// Make pingable cache globally accessible
+window.pingable = window.pingable || {};
+
+/**
+ * Generic pingable popup handler that can be used for comments, posts, etc.
+ * @param {Event} ev - The keyup event
+ * @param {Function} fetchPingable - Async function that returns a promise resolving to {username: id} object
+ * @param {string} cacheKey - Unique cache key for this context
+ */
+window.pingable_popup_generic = async function(ev, fetchPingable, cacheKey) {
+  if (QPixel.Popup.isSpecialKey(ev.keyCode)) {
+    return;
+  }
+
+  const $tgt = $(ev.target);
+  const content = $tgt.val();
+  const splat = content.split(' ');
+  const caretPos = $tgt[0].selectionStart;
+  const [currentWord, posInWord] = QPixel.currentCaretSequence(splat, caretPos);
+
+  const itemTemplate = $('<a href="javascript:void(0)" class="item"></a>');
+  const callback = (ev, popup) => {
+    const $item = $(ev.target).hasClass('item') ? $(ev.target) : $(ev.target).parents('.item');
+    const id = $item.data('user-id');
+    $tgt[0].selectionStart = caretPos - posInWord;
+    $tgt[0].selectionEnd = (caretPos - posInWord) + currentWord.length;
+    QPixel.replaceSelection($tgt, `@#${id}`);
+    popup.destroy();
+    $tgt.focus();
+  };
+
+  // If the word the caret is currently in starts with an @, and has at least 3 characters after that, assume it's
+  // an attempt to ping another user with a username, and kick off suggestions -- unless it starts with @#, in which
+  // case it's likely an already-selected ping.
+  if (currentWord.startsWith('@') && !currentWord.startsWith('@#') && currentWord.length >= 4) {
+    if (!window.pingable[cacheKey] || Object.keys(window.pingable[cacheKey]).length === 0) {
+      window.pingable[cacheKey] = await fetchPingable();
+    }
+
+    const items = Object.entries(window.pingable[cacheKey]).filter(e => {
+      return e[0].toLowerCase().startsWith(currentWord.substr(1).toLowerCase());
+    }).map(e => {
+      const username = e[0].replace(/</g, '&#x3C;').replace(/>/g, '&#x3E;');
+      const id = e[1];
+      return itemTemplate.clone().html(`${username} <span class="has-color-tertiary-600">#${id}</span>`)
+        .attr('data-user-id', id);
+    });
+    QPixel.Popup.getPopup(items, $tgt[0], callback);
+  }
+  else {
+    QPixel.Popup.destroyAll();
+  }
+};
+
 $(() => {
   $('.js-more-comments').on('click', async evt => {
     evt.preventDefault();
@@ -199,7 +253,6 @@ $(() => {
     $(evt.target).attr('data-disable-with', 'Posting...');
   });
 
-  const pingable = {};
   $(document).on('keyup', '.js-comment-field', pingable_popup);
   $(document).on('focus', '.js-comment-field', function() {
     const $this = $(this);
@@ -210,52 +263,17 @@ $(() => {
   });
 
   async function pingable_popup(ev) {
-    if (QPixel.Popup.isSpecialKey(ev.keyCode)) {
-      return;
-    }
-
     const $tgt = $(ev.target);
-    const content = $tgt.val();
-    const splat = content.split(' ');
-    const caretPos = $tgt[0].selectionStart;
-    const [currentWord, posInWord] = QPixel.currentCaretSequence(splat, caretPos);
+    const threadId = $tgt.data('thread');
+    const postId = $tgt.data('post');
+    const cacheKey = `${threadId}-${postId}`;
 
-    const itemTemplate = $('<a href="javascript:void(0)" class="item"></a>');
-    const callback = (ev, popup) => {
-      const $item = $(ev.target).hasClass('item') ? $(ev.target) : $(ev.target).parents('.item');
-      const id = $item.data('user-id');
-      $tgt[0].selectionStart = caretPos - posInWord;
-      $tgt[0].selectionEnd = (caretPos - posInWord) + currentWord.length;
-      QPixel.replaceSelection($tgt, `@#${id}`);
-      popup.destroy();
-      $tgt.focus();
+    const fetchPingable = async () => {
+      const resp = await fetch(`/comments/thread/${threadId}/pingable?post=${postId}`);
+      return await resp.json();
     };
 
-    // If the word the caret is currently in starts with an @, and has at least 3 characters after that, assume it's
-    // an attempt to ping another user with a username, and kick off suggestions -- unless it starts with @#, in which
-    // case it's likely an already-selected ping.
-    if (currentWord.startsWith('@') && !currentWord.startsWith('@#') && currentWord.length >= 4) {
-      const threadId = $tgt.data('thread');
-      const postId = $tgt.data('post');
-
-      if (!pingable[`${threadId}-${postId}`] || Object.keys(pingable[`${threadId}-${postId}`]).length === 0) {
-        const resp = await fetch(`/comments/thread/${threadId}/pingable?post=${postId}`);
-        pingable[`${threadId}-${postId}`] = await resp.json();
-      }
-
-      const items = Object.entries(pingable[`${threadId}-${postId}`]).filter(e => {
-        return e[0].toLowerCase().startsWith(currentWord.substr(1).toLowerCase());
-      }).map(e => {
-        const username = e[0].replace(/</g, '&#x3C;').replace(/>/g, '&#x3E;');
-        const id = e[1];
-        return itemTemplate.clone().html(`${username} <span class="has-color-tertiary-600">#${id}</span>`)
-          .attr('data-user-id', id);
-      });
-      QPixel.Popup.getPopup(items, $tgt[0], callback);
-    }
-    else {
-      QPixel.Popup.destroyAll();
-    }
+    return window.pingable_popup_generic(ev, fetchPingable, cacheKey);
   }
 
   $('.js-new-thread-link').on('click', async ev => {

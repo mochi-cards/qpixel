@@ -190,6 +190,28 @@ $(() => {
 
   const postFields = $('.post-field');
 
+  // Enable pingable popup for post fields
+  $(document).on('keyup', '.js-post-field', async (ev) => {
+    const $tgt = $(ev.target);
+    const postId = $tgt.closest('form').find('input[name="post[parent_id]"]').val() ||
+                   window.location.pathname.match(/\/posts\/(\d+)/)?.[1];
+
+    if (!postId) {
+      return; // Can't get pingable users without a post context
+    }
+
+    const cacheKey = `post-${postId}`;
+    const fetchPingable = async () => {
+      const resp = await fetch(`/posts/${postId}/pingable`);
+      return await resp.json();
+    };
+
+    // Use the global pingable popup function defined in comments.js
+    if (typeof window.pingable_popup_generic !== 'undefined') {
+      return window.pingable_popup_generic(ev, fetchPingable, cacheKey);
+    }
+  });
+
   const draftFieldsSelectors = [
     '.js-post-field',
     '.js-license-select',

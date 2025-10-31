@@ -26,6 +26,9 @@ class Notification < ApplicationRecord
     elsif m = content.match(/You were mentioned in a comment to (.+) on the post '([^']+)'/)
       @title = m[2]
       @type = :mention
+    elsif m = content.match(/You were mentioned in a post: (.+)/)
+      @title = m[1]
+      @type = :mention
     elsif m = content.match(/New feedback on (.+)/)
       @title = m[1]
       @type = :feedback

@@ -188,7 +188,7 @@
     </div>
 
     <div class="post-body">
-      <%= raw(sanitize(post.body, scrubber: scrubber)) %>
+      <%= render_pings_in_post(raw(sanitize(post.body, scrubber: scrubber)), pingable: get_pingable_for_post(post)) %>
     </div>
 
     <!-- post--votes class needed by votes.js -->

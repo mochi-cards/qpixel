@@ -61,4 +61,56 @@ module PostsHelper
   def scrubber
     PostsHelper::PostScrubber.new
   end
+
+  def get_pingable_for_post(post)
+    # For a post, pingable users include:
+    # - post author (if editing)
+    # - parent post author (if it's an answer)
+    # - other answer authors
+    # - post history event users
+    # - comment authors on the post and its parent
+
+    query = if post.parent_id.present?
+              # This is an answer - include parent author and other answer authors
+              <<~END_SQL
+                SELECT posts.user_id FROM posts WHERE posts.id = #{post.parent_id}
+                UNION DISTINCT
+                SELECT DISTINCT posts.user_id FROM posts WHERE posts.parent_id = #{post.parent_id}
+                UNION DISTINCT
+                SELECT DISTINCT ph.user_id FROM post_histories ph WHERE ph.post_id = #{post.id} OR ph.post_id = #{post.parent_id}
+                UNION DISTINCT
+                SELECT DISTINCT comments.user_id FROM comments WHERE comments.post_id = #{post.id} OR comments.post_id = #{post.parent_id}
+              END_SQL
+            else
+              # This is a top-level post - include answer authors
+              <<~END_SQL
+                SELECT posts.user_id FROM posts WHERE posts.id = #{post.id}
+                UNION DISTINCT
+                SELECT DISTINCT posts.user_id FROM posts WHERE posts.parent_id = #{post.id}
+                UNION DISTINCT
+                SELECT DISTINCT ph.user_id FROM post_histories ph WHERE ph.post_id = #{post.id}
+                UNION DISTINCT
+                SELECT DISTINCT comments.user_id FROM comments WHERE comments.post_id = #{post.id}
+              END_SQL
+            end
+
+    ActiveRecord::Base.connection.execute(query).to_a.flatten
+  end
+
+  def render_pings_in_post(content, pingable: nil)
+    content.gsub(/@#\d+/) do |id|
+      u = User.where(id: id[2..-1].to_i).first
+      if u.nil?
+        id
+      else
+        was_pung = pingable.present? && pingable.include?(u.id)
+        classes = "ping #{u.id == current_user&.id ? 'me' : ''} #{was_pung ? '' : 'unpingable'}"
+        user_link u,
+          class: classes,
+          dir: 'ltr',
+          anchortext: "@#{u.rtl_safe_username}",
+          title: was_pung ? '' : 'This user was not notified because they have not participated in this post.'
+      end
+    end.html_safe
+  end
 end

@@ -141,6 +141,7 @@ Rails.application.routes.draw do
     post   'save-draft',                   to: 'posts#save_draft', as: :save_draft
     post   'delete-draft',                 to: 'posts#delete_draft', as: :delete_draft
 
+    get    ':id/pingable',                 to: 'posts#pingable', as: :post_pingable
     get    ':id',                          to: 'posts#show', as: :post
     get    ':id/history',                  to: 'post_history#post', as: :post_history
     get    ':id/edit',                     to: 'posts#edit', as: :edit_post

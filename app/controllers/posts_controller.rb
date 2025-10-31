@@ -2,7 +2,7 @@
 # rubocop:disable Metrics/MethodLength
 class PostsController < ApplicationController
   before_action :authenticate_user!, except: [:document, :help_center, :show, :index, :rss_feed]
-  before_action :set_post, only: [:toggle_comments, :feature, :lock, :unlock]
+  before_action :set_post, only: [:toggle_comments, :feature, :lock, :unlock, :pingable]
   before_action :set_scoped_post, only: [:change_category, :show, :edit, :update, :close, :reopen, :delete, :restore]
   before_action :verify_moderator, only: [:toggle_comments]
   before_action :edit_checks, only: [:edit, :update]
@@ -109,6 +109,10 @@ class PostsController < ApplicationController
         end
         @post.parent.update(last_activity: DateTime.now, last_activity_by: current_user)
       end
+
+      # Handle pings in new posts
+      pings = check_for_post_pings(@post, @post.body_markdown)
+      apply_post_pings(@post, pings)
 
       ['p', '1', '2'].each do |key|
         Rails.cache.delete "community_user/#{current_user.community_user.id}/metric/#{key}"
@@ -231,6 +235,7 @@ class PostsController < ApplicationController
 
   def update
     before = { body: @post.body_markdown, title: @post.title, tags: @post.tags.to_a }
+    before_pings = check_for_post_pings(@post, before[:body])
     body_rendered = helpers.post_markdown(:post, :body_markdown)
     new_tags_cache = params[:post][:tags_cache]&.reject(&:empty?)
 
@@ -283,6 +288,11 @@ class PostsController < ApplicationController
               @post.errors.merge!(history_entry.errors)
               raise ActiveRecord::Rollback
             end
+
+            # Handle pings in edited posts (only new pings)
+            after_pings = check_for_post_pings(@post, @post.body_markdown)
+            new_pings = after_pings - before_pings
+            apply_post_pings(@post, new_pings)
 
             if params[:redact]
               PostHistory.redact(@post, current_user)
@@ -650,6 +660,12 @@ class PostsController < ApplicationController
     render json: { status: 'success', success: true }
   end
 
+  def pingable
+    ids = helpers.get_pingable_for_post(@post)
+    users = User.where(id: ids)
+    render json: users.to_h { |u| [u.username, u.id] }
+  end
+
   private
 
   def permitted
@@ -736,6 +752,25 @@ class PostsController < ApplicationController
                  .includes(:post_type, :tags).list_includes
                  .paginate(page: params[:page], per_page: 50)
                  .order(sort_param)
+  end
+
+  def check_for_post_pings(post, content)
+    pingable = helpers.get_pingable_for_post(post)
+    matches = content.scan(/@#(\d+)/)
+    matches.flatten.select { |m| pingable.include?(m.to_i) }.map(&:to_i)
+  end
+
+  def apply_post_pings(post, pings)
+    pings.each do |p|
+      user = User.where(id: p).first
+      next if user.nil?
+      next if user.id == current_user.id
+      next if user.id == post.user_id
+
+      title = post.parent.nil? ? post.title : post.parent.title
+      user.create_notification("You were mentioned in a post: #{title}",
+                               helpers.generic_show_link(post))
+    end
   end
 end
 # rubocop:enable Metrics/MethodLength
