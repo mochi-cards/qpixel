@@ -25,7 +25,67 @@
 
   <%= render 'mochi/categories/list' %>
 
-  <div style="padding: 0 32px; max-width: 50em">
+
+  <div style="padding: 0 32px; max-width: calc(50em + 32px + 32px);">
+
+    <div class="post-fixed-header">
+      <div class="mochi-container" style="margin: 6px auto;">
+        <div style="padding: 0 16px">
+          <div style="display: grid; grid-template-columns: 200px 1fr;">
+            <div>&nbsp;</div>
+            <div style="padding: 0 32px; max-width: calc(50em + 32px + 32px);">
+              <h1 class="post-show--title">
+                <% if @post.post_type.is_closeable && @post.closed && !@post.duplicate_post %>
+                  <%= octicon 'lock', :height => 24,  :class => "post-title-icon", :"aria-label" => "This post has been closed" %>
+                <% end %>
+                <%= @post.title %>
+              </h1>
+
+              <div style="display: flex; justify-content: space-between;">
+                <div class="post-byline">
+                  <img alt="user card" src="<%= avatar_url(user, 20) %>" class="avatar small" />
+                  <strong style="color: var(--color-fg);"><%= user_name @post.user %></strong>
+                  <% if user.is_admin %>
+                    <span class="user-label">Admin</span>
+                  <% elsif user.is_moderator %>
+                    <span class="user-label">Mod</span>
+                  <% end %>
+                  <% if user.staff? %>
+                    <span class="user-label">Staff</span>
+                  <% end %>
+                  <%= link_to generic_share_link(@post) do %>
+                    <%= time_ago_in_words(@post.created_at) %> ago
+                  <% end %>
+                  <% if user == current_user %>
+                    <div>
+                      &nbsp;&middot;&nbsp;
+                      <%= link_to edit_post_path(@post), class: '' do %>
+                        Edit post
+                      <% end %>
+                    </div>
+                  <% end %>
+                  <% if @post.deleted? %>
+                    <span class="deleted-label">Deleted</span>
+                  <% end %>
+
+
+                  <span class="sign-up-to-post category-tag" style="margin-top: 2px;">
+                    <%= octicon "hash", :height => 10,  :class => "category-icon", :"aria-label" => category.name %>
+                    <%= category.name %>
+                  </span>
+
+
+                </div>
+
+
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <h1 class="post-show--title">
       <% if @post.post_type.is_closeable && @post.closed && !@post.duplicate_post %>
