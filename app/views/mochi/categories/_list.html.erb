@@ -45,6 +45,14 @@
 
     <ul class="category-list">
       <li>
+        <%= link_to edit_user_profile_path, class: "category-link #{current_page?(edit_user_profile_url) ? 'active' : ''}" do %>
+          <div>
+            <%= octicon 'person', :height => 16,  :class => "category-icon", :"aria-label" => "Inbox" %>
+            Profile
+          </div>
+        <% end %>
+      </li>
+      <li>
         <%= link_to notifications_path, class: "category-link #{current_page?(notifications_url) ? 'active' : ''}" do %>
           <div>
             <%= octicon 'inbox', :height => 16,  :class => "category-icon", :"aria-label" => "Inbox" %>

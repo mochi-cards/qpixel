@@ -1,0 +1,49 @@
+$sizes: (16, 32, 40, 48, 64, 128, 256);
+
+@each $size in $sizes {
+  .avatar-#{$size} {
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #ffffff26;
+  }
+}
+
+.form-caption {
+  margin: 0;
+  font-size: 12px;
+}
+
+label {
+  font-weight: 600;
+}
+
+.edit_user .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 2em;
+  align-items: flex-start;
+}
+
+.mochi-input {
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--color-fg);
+  min-height: 35px;
+  height: 35px;
+  padding: 8px;
+  resize: vertical;
+  border-radius: 6px;
+
+  &::placeholder {
+    color: var(--color-fg-muted);
+  }
+
+  &:focus {
+    border-color: var(--color-fg-blue);
+  }
+
+  &:focus-visible {
+    outline: none;
+    inset: 0 0 0 1px var(--color-fg-blue);
+  }
+}

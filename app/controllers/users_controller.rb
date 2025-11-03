@@ -352,7 +352,8 @@ class UsersController < ApplicationController
   end
 
   def edit_profile
-    render layout: 'without_sidebar'
+    # render layout: 'without_sidebar'
+    render "mochi/users/edit_profile", layout: "mochi/layouts/application"
   end
 
   def validate_profile_website(profile_params)
@@ -370,7 +371,10 @@ class UsersController < ApplicationController
 
   def update_profile
     profile_params = params.require(:user).permit(:username, :profile_markdown, :website, :twitter, :discord)
-    profile_params[:twitter] = profile_params[:twitter].delete('@')
+
+    if profile_params[:website].present?
+      profile_params[:twitter] = profile_params[:twitter].delete('@')
+    end
 
     if profile_params[:website].present?
       validate_profile_website(profile_params)
@@ -389,10 +393,14 @@ class UsersController < ApplicationController
       end
     end
 
-    profile_rendered = helpers.post_markdown(:user, :profile_markdown)
-    if @user.update(profile_params.merge(profile: profile_rendered))
+    if params[:user][:profile_markdown].present?
+      profile_rendered = helpers.post_markdown(:user, :profile_markdown)
+      profile_params = profile_params.merge(profile: profile_rendered)
+    end
+
+    if @user.update(profile_params)
       flash[:success] = 'Your profile details were updated.'
-      redirect_to user_path(current_user)
+      redirect_to edit_user_profile_path(current_user)
     else
       flash[:danger] = "Couldn't update your profile."
       render :edit_profile

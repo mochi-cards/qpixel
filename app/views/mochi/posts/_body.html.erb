@@ -4,6 +4,7 @@
 <div id="<%= (is_question ? 'question-' : 'answer-') + post.id.to_s %>">
   <div style="display: flex; justify-content: space-between;">
     <div class="post-byline">
+      <img alt="user card" src="<%= avatar_url(user, 32) %>" class="avatar" />
       <strong style="color: var(--color-fg);"><%= user_name post.user %></strong>
       <% if user.is_admin %>
         <span class="user-label">Admin</span>
