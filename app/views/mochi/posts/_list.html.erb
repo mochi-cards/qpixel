@@ -116,7 +116,7 @@
         <% answer = post.reactions.first || post.children.find { |p| p.reactions.any? }.reactions.first %>
         <span class="reaction-label">
           <%= octicon 'check', :height => 14,  :class => "upvote-icon", :"aria-label" => "Marked as answer" %>
-          <%= answer.reaction_type.name %>
+          <%= answer.reaction_type.display_name %>
         </span>
       <% end %>
     </div>
