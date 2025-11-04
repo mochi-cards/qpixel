@@ -56,7 +56,7 @@ QPixel.Popup = class Popup {
     this.$field = $(this.field);
     this.callback = cb;
     this._id = Math.floor(Math.random() * 2**32).toString(16);
-    this.$popup = $(`<div class="ta-popup" id="popup-${this._id}"></div>`);
+    this.$popup = $(`<div class="mochi-popup" id="popup-${this._id}"></div>`);
 
     this._clickHandler = this.getClickHandler();
     this._keyHandler = this.getKeyHandler();

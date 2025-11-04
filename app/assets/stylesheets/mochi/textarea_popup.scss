@@ -1,0 +1,45 @@
+.mochi-popup {
+   background-color: var(--card-background);
+   box-shadow:       var(--modal-box-shadow);
+   border-radius:    6px;
+   display:          flex;
+   line-height:      1.2;
+   flex-direction:   column;
+  min-width: 200px;
+
+  padding: 6px 0;
+
+  position: absolute;
+  // background: white;
+  // border: 1px solid $muted-graphic;
+  // border-radius: 0.3em;
+  // box-shadow: 3px 3px 5px -3px $muted-text;
+  max-height: 250px;
+  overflow-y: scroll;
+  z-index: 9999;
+
+  .item {
+    display: block;
+    text-decoration: none;
+
+    min-height:  26px;
+    padding:     5px 12px;
+    width:       100%;
+    font-size:   13px;
+    user-select: none;
+    white-space: nowrap;
+
+    &:last-of-type {
+      border-bottom: 0;
+    }
+
+    &.active, &:hover {
+      color: white;
+      // background: $primary;
+      background-color: var(--menu-background-hover);
+      transition: all 0.05s ease;
+      text-decoration: none;
+    }
+  }
+}
+

@@ -129,6 +129,11 @@ body {
     --text-area-bg: rgba(0, 0, 0, 0.025);
 
     --ping-bg: rgb(233,233,233);
+
+    --modal-box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, \
+                        rgba(15, 15, 15, 0.1) 0px 5px 10px, \
+                        rgba(15, 15, 15, 0.2) 0px 15px 40px;
+    --menu-background-hover:    rgba(51, 51, 51, 0.04);
   }
   .dark {
     display: none !important;
@@ -193,6 +198,12 @@ body {
     --text-area-bg: rgba(0, 0, 0, 0.1);
 
     --ping-bg: rgb(50,51,53);
+
+    --modal-box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, \
+                        rgba(15, 15, 15, 0.2) 0px 5px 10px, \
+                        rgba(15, 15, 15, 0.4) 0px 15px 40px, \
+                        rgb(80, 80, 80) 0px 0px 0px 1px;
+    --menu-background-hover:    rgba(255,255,255,0.06);
   }
   .light {
     display: none !important;
