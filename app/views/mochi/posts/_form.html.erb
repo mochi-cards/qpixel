@@ -30,7 +30,7 @@
 
 <div>
   <% if false && post_type.has_parent? %>
-    <% if post.post_type.has_reactions && post.post_type.reactions.any? && post.parent %>
+    <% if post.post_type.has_reactions && post.post_type.reactions.any? { |r| r.name == "answer" } && post.parent %>
       <h3 class="body-label">Suggest an answer</h2>
     <% else %>
       <h3 class="body-label">Add a reply</h2>
