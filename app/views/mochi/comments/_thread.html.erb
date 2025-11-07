@@ -1,13 +1,9 @@
 <% comment_threads = post.comment_threads.initially_visible.order(updated_at: :desc) %>
 <% comment_thread = comment_threads.first %>
-<% public_count = comment_threads.count %>
-<% available_count = current_user&.has_post_privilege?('flag_curate', post) ?
-  post.comment_threads.count :
-  post.comment_threads.publicly_available.count %>
-<% pingable = false %>
 
 
 <% if comment_thread %>
+  <% pingable = get_pingable(comment_thread) %>
   <div class="<%= comment_thread.deleted ? 'is-red' : '' %>" data-deleted="<%= comment_thread.deleted %>"
     style="padding-top: 8px;"
        data-archived="<%= comment_thread.archived %>" data-thread="<%= comment_thread.id %>"
