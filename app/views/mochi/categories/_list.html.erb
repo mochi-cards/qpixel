@@ -66,4 +66,31 @@
       </li>
     </ul>
   <% end %>
+
+  <% if moderator? || admin? %>
+    <hr class="category-list" style="margin: 15px 15px 15px 0; border-top: 1px solid var(--border-color)">
+
+    <ul class="category-list">
+      <% if moderator? %>
+        <li>
+          <%= link_to moderator_path, class: "category-link" do %>
+            <div>
+              <%= octicon 'tools', :height => 16,  :class => "category-icon", :"aria-label" => "Moderator tools" %>
+              Moderator Tools
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+      <% if admin? %>
+        <li>
+          <%= link_to admin_path, class: "category-link" do %>
+            <div>
+              <%= octicon 'gear', :height => 16,  :class => "category-icon", :"aria-label" => "Admin tools" %>
+              Admin Tools
+            </div>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
 </div>

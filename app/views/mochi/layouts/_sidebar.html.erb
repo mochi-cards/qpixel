@@ -62,35 +62,6 @@
     <% end %>
   <% end %>
 
-  <!-- Promoted post -->
-  <% if false && (Rails.env.development? || rand(100) <= 10) %>
-    <% post = Post.unscoped.find_by id: promoted_posts.keys.shuffle.first %>
-    <% if post.present? %>
-      <div class="has-margin-4">
-        <%= link_to post_url(post, host: post.community.host) do %>
-          <%= image_tag specific_question_ads_url(post, host: post.community.host) %>
-        <% end %>
-      </div>
-    <% end %>
-  <% end %>
-
-  <!-- Moderator tools -->
-  <% if moderator? || admin? %>
-    <div class="widget has-margin-4">
-      <h4 class="widget--header has-margin-0">Moderator Tools</h4>
-      <div class="widget--body">
-        <ul>
-          <% if moderator? %>
-            <li><%= link_to 'Moderator Tools', moderator_path %></li>
-          <% end %>
-          <% if admin? %>
-            <li><%= link_to 'Admin Tools', admin_path %></li>
-          <% end %>
-        </ul>
-      </div>
-    </div>
-  <% end %>
-
   <% unless @community.is_fake || true %>
     <% if user_signed_in? %>
       <div class="widget has-margin-4">
