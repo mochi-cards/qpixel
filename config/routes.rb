@@ -158,7 +158,8 @@ Rails.application.routes.draw do
     post   ':id/promote',                  to: 'moderator#nominate_promotion', as: :promote_post
     delete ':id/promote',                  to: 'moderator#remove_promotion', as: :remove_post_promotion
 
-    get    ':id/:answer',                  to: 'posts#show', as: :answer_post
+    get    ':id/answer/:answer',           to: 'posts#show', as: :answer_post
+    get    ':id/:title',                   to: 'posts#show', as: :post_with_title
   end
 
   get    'policy/:slug/history',           to: 'post_history#slug_post', as: :policy_post_history, constraints: { slug: /.*/ }
