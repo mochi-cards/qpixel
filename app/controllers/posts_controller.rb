@@ -163,12 +163,12 @@ class PostsController < ApplicationController
                     term: params[:sort],
                     direction: params[:direction],
                     default: if @post.post_type.has_votes
-                               Arel.sql('deleted ASC, score DESC, RAND()')
+                               Arel.sql('score DESC, created_at ASC, RAND()')
                              else
-                               Arel.sql('deleted ASC, created_at ASC, RAND()')
+                               Arel.sql('created_at ASC, RAND()')
                              end
                   },
-                  score: Arel.sql('deleted ASC, score DESC, RAND()'),
+                  score: Arel.sql('score DESC, created_at ASC, RAND()'),
                   active: :last_activity,
                   age: :created_at
                 )
