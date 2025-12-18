@@ -1,7 +1,7 @@
 <% user = post.user %>
 <% is_question = post.post_type_id == Question.post_type_id %>
 
-<div id="<%= (is_question ? 'question-' : 'answer-') + post.id.to_s %>">
+<div id="<%= (is_question ? 'question-' : 'answer-') + post.id.to_s %>" class="<%= post.deleted? ? 'deleted' : '' %>">
   <div style="display: flex; justify-content: space-between;">
     <div class="post-byline">
       <img alt="user card" src="<%= avatar_url(user, 32) %>" class="avatar" />

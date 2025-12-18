@@ -10,3 +10,12 @@ a.ping, a.ping.me {
 .post-body a.ping {
   color: var(--color-fg);
 }
+
+.post-comment .post-byline .avatar {
+  width: 24px;
+  height: 24px;
+}
+
+.post-comment .post-body p:first-of-type {
+  margin-top: 0;
+}

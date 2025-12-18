@@ -40,7 +40,7 @@
 
 
     <div class="post-byline" style="margin: 0 0 8px 16px;">
-      <img alt="user card" src="<%= avatar_url(comment.user, 32) %>" class="avatar" />
+      <img alt="user card" src="<%= avatar_url(comment.user, 24) %>" class="avatar" />
       <strong style="color: var(--color-fg);"><%= user_name comment.user %></strong>
       <% if comment.user.is_admin %>
         <span class="user-label">Admin</span>
@@ -90,7 +90,7 @@
     </div>
   </div>
   <div style="display: flex; padding-left: 16px;">
-    <div style="width: 2px; margin: 0 calc(15px + 8px) 0 15px; background-color: var(--border-color);">
+    <div style="width: 2px; margin: 0 19px 0 11px; background-color: var(--border-color);">
     </div>
     <div class="post-body" style="padding: 0;">
       <%= render_pings(raw(sanitize(render_comment_helpers(render_markdown(comment.content)), scrubber: CommentScrubber.new)), pingable: pingable) %>
