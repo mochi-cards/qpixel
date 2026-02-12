@@ -110,6 +110,7 @@ ul.category-list {
 
   .post-list--content {
     margin: 8px 0;
+    // margin: 6px 0 10px;
     color: var(--color-fg-muted);
   }
 
@@ -118,7 +119,7 @@ ul.category-list {
     color: var(--color-fg-muted);
     display: flex;
     align-items: center;
-    gap: 10px
+    gap: 7px
   }
   .user-name {
     color: var(--color-fg);
@@ -168,9 +169,13 @@ ul.category-list {
   fill: var(--color-fg);
   display: flex;
   align-items: center;
+  font-size: 2em;
+  line-height: 1;
   .category-icon {
-    margin-right: 0.375em;
+    margin-right: 0.2em;
     fill: var(--color-fg-subtle);
+    width: 1em;
+    height: 1em;
   }
 }
 .category-icon {

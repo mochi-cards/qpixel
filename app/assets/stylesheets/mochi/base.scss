@@ -29,11 +29,6 @@ a {
   color: currentColor;
   fill: currentColor;
   text-decoration: none;
-
-  &:hover {
-    color: var(--color-fg-blue);
-    fill: var(--color-fg-blue);
-  }
 }
 
 * { box-sizing: border-box; }
@@ -63,13 +58,17 @@ body {
   /* padding: 0 72px; */
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   overflow-x: hidden;
 
   margin: 0 auto;
   max-width: 1440px;
-  overflow-x: hidden;
   width: calc(100vw - 60px);
+
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: center;
 }
 
 @media (prefers-color-scheme: light) {
@@ -108,6 +107,8 @@ body {
     --input-border-active: 2px solid rgba(51, 51, 51, 0.2);
     --input-background: rgb(255, 255, 255);
 
+    --subhead: rgb(97, 97, 97);
+
     --button--color: rgba(51, 51, 51, 1);
     --button--background: rgb(255, 255, 255);
     --button--background-hover: rgb(239,239,239);
@@ -129,6 +130,12 @@ body {
     --text-area-bg: rgba(0, 0, 0, 0.025);
 
     --ping-bg: rgb(233,233,233);
+    //
+    // --button-background:         rgb(255, 255, 255);
+    // --button-background-hover: rgb(239,239,239);
+    // --button-background-active: rgb(223, 223, 223);
+    // --button-box-shadow:         rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset,
+    //                              rgba(15, 15, 15, 0.1) 0px 1px 2px;
 
     --modal-box-shadow: rgba(15, 15, 15, 0.05) 0px 0px 0px 1px, \
                         rgba(15, 15, 15, 0.1) 0px 5px 10px, \
@@ -150,9 +157,15 @@ body {
     --color-red: #e5534b;
     --color-green: rgb(87, 171, 90); //rgb(161, 204, 101);
     --color-green-bg: rgba(87, 171, 90, 0.1); //rgb(161, 204, 101);
-    --bg-color: rgb(36, 36, 38);
-    --bg-color-light: rgb(46, 47, 49);
-    --bg-color-lighter: rgb(56, 57, 59);
+
+    --bg-color: rgb(46, 46, 48);
+    --bg-color-light: rgb(56, 57, 59);
+    --bg-color-lighter: rgb(70, 71, 73);
+
+    // --bg-color: rgb(36, 36, 38);
+    // --bg-color-light: rgb(46, 47, 49);
+    // --bg-color-lighter: rgb(56, 57, 59);
+
     --code-color: rgba(255, 255, 255, 0.8); 
     --pre-bg-color: rgba(0,0,0,0.1);
     --pre-border-color: rgba(0,0,0,0.15); 
@@ -165,7 +178,7 @@ body {
     --linux-logo-filter: brightness(0);
     --link-underline: 1px solid rgba(255,255,255, 0.3);
     --link-underline-hover: 1px solid rgba(255,255,255, 1);
-    --top-bar-background-hover: rgba(255, 255, 255, 0.04);
+    --top-bar-background-hover: rgba(255, 255, 255, 0.06);
     --post-list-hover: rgba(255, 255, 255, 0.02);
     --card-background: rgb(36, 36, 38);
     --card-border: rgba(0,0,0,0.2);
@@ -176,6 +189,8 @@ body {
     --input-border: 2px solid rgba(255, 255, 255, 0.1);
     --input-border-active: 2px solid rgba(255, 255, 255, 0.3);
     --input-background: rgb(46, 47, 49);
+
+    --subhead: rgb(178, 178, 178);
 
     --button--color: rgba(255, 255, 255, 0.9);
     --button--background: rgb(60, 61, 63);
@@ -198,6 +213,13 @@ body {
     --text-area-bg: rgba(0, 0, 0, 0.1);
 
     --ping-bg: rgb(50,51,53);
+    //
+    // --button-background:         rgb(60, 61, 63);
+    // --button-background-hover:   rgb(68, 69, 71);
+    // --button-background-active: rgb(120, 123, 123);
+    // --button-box-shadow:         rgba(0, 0, 0, 0.12) 0px 1px 1px 0px,
+    //                              rgb(80, 80, 80) 0px 0px 0px 1px,
+    //                              rgba(0, 0, 0, 0.2) 0px 2px 5px 0px;
 
     --modal-box-shadow: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px, \
                         rgba(15, 15, 15, 0.2) 0px 5px 10px, \
@@ -247,7 +269,7 @@ body {
 .mochi-container {
   margin: 24px auto;
   padding: 0 32px;
-  max-width: 1280px;
+  max-width: 1150px;
   flex-grow: 1;
   width: 100%;
 }
@@ -324,11 +346,6 @@ input {
 ::-moz-selection {
     background-color: #0b52a6 !important;
     color: #dfddda !important;
-}
-
-a:hover {
-  color: unset;
-  text-decoration: underline;
 }
 
 .notice {
@@ -465,3 +482,61 @@ a:hover {
     fill: var(--color-fg-subtle);
   }
 }
+
+// button {
+//   font-family: inherit;
+//   background-color: unset;
+//   color: inherit;
+//   margin: 0; /* Needed to override Safari's user agent styles */
+// }
+//
+// .default-button {
+//   display: inline-flex;
+//   position: relative;
+//   flex-shrink: 0;
+//   align-items: center;
+//   justify-content: center;
+//   font-weight: 500;
+//   line-height: 1.2;
+//   border-radius: 6px;
+//   border: none;
+//   user-select: none;
+//   transition-property: background, opacity;
+//   transition-duration: 100ms;
+//   transition-timing-function: ease-out;
+//   cursor: pointer;
+//   opacity: 1;
+//   overflow: hidden;
+//
+//   font-size: 13px;
+//   height: 28px;
+//   padding: 0 10px;
+//   gap: 6px;
+//
+//   color:      var(--fg-color);
+//   fill:       var(--fg-color);
+//   background: var(--button-background);
+//   box-shadow: var(--button-box-shadow);
+//
+//  /*  styles/mouse */
+//  /*  {:&:hover {:background #(if (:disabled? %) */
+//  /*                            (color :button/background) */
+//  /*                            (color :button:hover/background))}}} */
+//  /* {:&:active {:background #(if (:disabled? %) */
+//  /*                            (color :button/background) */
+//  /*                           (color :button:active/background))}}]) */
+//
+// }
+// .default-button:hover {
+//   background: var(--button-background-hover);
+// }
+// .default-button:active {
+//   background: var(--button-background-active);
+// }
+// .default-button:focus {
+//   box-shadow: var(--focus-box-shadow);
+// }
+// .default-button:disabled {
+//   cursor: default;
+//   opacity: 0.4;
+// }

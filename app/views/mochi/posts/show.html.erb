@@ -34,15 +34,15 @@
           <div style="display: grid; grid-template-columns: 200px 1fr;">
             <div>&nbsp;</div>
             <div style="padding: 0 32px; max-width: calc(50em + 32px + 32px);">
-              <h1 class="post-show--title">
+              <h1 class="post-show--title" style="font-size: 1.8em">
                 <% if @post.post_type.is_closeable && @post.closed && !@post.duplicate_post %>
                   <%= octicon 'lock', :height => 24,  :class => "post-title-icon", :"aria-label" => "This post has been closed" %>
                 <% end %>
                 <%= @post.title %>
               </h1>
 
-              <div style="display: flex; justify-content: space-between;">
-                <div class="post-byline">
+              <div style="display: flex; justify-content: space-between; margin-top: 2px;">
+                <div class="post-byline" style="line-height: 1.3">
                   <img alt="user card" src="<%= avatar_url(user, 20) %>" class="avatar small" />
                   <strong style="color: var(--color-fg);"><%= user_name @post.user %></strong>
                   <% if user.is_admin %>

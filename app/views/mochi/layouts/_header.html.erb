@@ -1,25 +1,36 @@
-<header id="top-bar">
-  <a href="https://mochi.cards/">
-    <%= image_tag asset_path('mochi/icon.webp'), height: 40, width: 40 %>
-    <span>Mochi</span>
-  </a>
-  <div class="links lg">
-    <a href="https://mochi.cards/blog">
-      Blog
+<nav class="top-nav">
+  <div style="width: 110px;">
+    <a href="https://mochi.cards/" class="nav-logo">
+      <%= image_tag asset_path('mochi/icon.webp'), height: 18, width: 18 %>
+      Mochi
     </a>
-    <a href="https://mochi.cards/changelog.html">
-      What's new?
-    </a>
-    <a href="https://mochi.cards/docs/">
+  </div>
+
+  <div class="main-nav">
+    <a href="/docs/">
+      <%= octicon 'book', :height => 16 %>
       Docs
     </a>
-    <a href="https://mochi.cards/#pricing-section">
-      Pricing
+    <a href="https://forum.mochi.cards/">
+      <%= octicon 'comment-discussion', :height => 16 %>
+      Forums
     </a>
+    <a href="/changelog/">
+      <%= octicon 'paper-airplane', :height => 16 %>
+      Changelog
+    </a>
+    <a href="/blog/">
+      <%= octicon 'pencil', :height => 16 %>
+      Blog
+    </a>
+  </div>
+
+  <div style="width: 110px; display: flex; justify-content: flex-end;">
     <% if user_signed_in? %>
       <%= link_to 'Log out', destroy_saml_user_session_path, method: :delete, class: '' %>
     <% else %>
       <%= link_to 'Log in', new_saml_user_session_path, class: '' %>
     <% end %>
   </div>
-</header>
+</nav>
+

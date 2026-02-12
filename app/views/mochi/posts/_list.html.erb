@@ -31,12 +31,6 @@
     <% end %>
   </div>
 
-  <div class="post-avatar" style="display: none;">
-    <%= link_to user_path(user), dir: 'ltr', class: 'post-user-link', data: {} do %>
-      <img alt="user card" src="<%= avatar_url(user, 32) %>" height="32" width="32" class="post-avatar" />
-    <% end %>
-  </div>
-
   <!-- Title -->
   <div class="post-title">
     <h3 class="post-list--title">
@@ -80,14 +74,28 @@
     <% end %>
 
     <div class="post-list--meta">
-    <!-- Poster / last activity -->
+
+      <!-- Avatar -->
+      <img alt="user card" src="<%= avatar_url(user, 20) %>" class="avatar small" style="margin: 0;" />
+
+      <!-- Poster / last activity -->
       <span>
+        <strong class="user-name"><%= user_name post.user %></strong>
+        <!-- started -->
+        <!-- <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at) %> ago</span> -->
+        <% if post.last_activity != post.created_at %>
+          <span title="<%= post.last_activity.iso8601 %>">updated <%= time_ago_in_words(post.last_activity) %> ago</span>
+        <% else %>
+          started
+          <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at) %> ago</span>
+        <% end %>
         <% unless @category %>
           <span class="sign-up-to-post category-tag" style="font-weight: 500; color: var(--color-fg); fill: var(--color-fg-subtle); display: inline-flex; align-items: center; gap: 2px; font-size: var(--font-size-small); margin: 0;">
             <%= octicon "hash", :height => 10,  :class => "category-icon", :"aria-label" => category.name %>
             <%= category.name %>
           </span>
         <% end %>
+      </span>
 
       <!-- Tags -->
       <% if post.post_type.has_tags %>
@@ -105,13 +113,8 @@
                 title: tag.excerpt.present? ? tag.excerpt : "(no description yet)" %>
         <% end %>
       <% end %>
-      <strong class="user-name"><%= user_name post.user %></strong> started
-      <span title="<%= post.created_at.iso8601 %>"><%= time_ago_in_words(post.created_at) %> ago</span>
-        <% if post.last_activity != post.created_at %>
-          &nbsp;/&nbsp; updated
-          <span title="<%= post.last_activity.iso8601 %>"><%= time_ago_in_words(post.last_activity) %> ago</span>
-        <% end %>
-      </span>
+
+      <!-- Answered -->
       <% if answered %>
         <% answer = post.reactions.first || post.children.find { |p| p.reactions.any? }.reactions.first %>
         <span class="reaction-label">

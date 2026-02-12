@@ -6,13 +6,13 @@
 
 <% page_title = (Rails.env.development? ? '[DEV] ' : '') +
                 SiteSetting['SiteName'].to_s +
-                (content_for?(:title) ? ' - ' + CGI.unescapeHTML(content_for(:title)) : '') %>
+                (content_for?(:title) ? ' / ' + CGI.unescapeHTML(content_for(:title)) : '') %>
 <title>
   <%= page_title %>
 </title>
 
 <% icon_path = SiteSetting['IconPath'] %>
-<link rel="icon" href="<%= icon_path.present? ? icon_path : '/assets/icon.png' %>" />
+<link rel="icon" href="<%= icon_path.present? ? icon_path : '/assets/favicon.ico' %>" />
 <link rel="search" type="application/opensearchdescription+xml"
       title="Codidact <%= RequestContext.community.name %> search" href="<%= osd_url(format: :xml) %>" />
 <link rel="preconnect" href="https://cdn.jsdelivr.net" />
